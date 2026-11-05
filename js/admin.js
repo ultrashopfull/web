@@ -26,7 +26,6 @@
 
 <section id="ta-appearance-section" class="ta-section" role="tabpanel" aria-labelledby="ta-tab-appearance">
  <div class="ta-editor-grid"><form id="ta-brand-form" class="ta-brand-form">
- 
  <div class="ta-logo-field"><span class="ta-field-title">Logotipo</span><div class="ta-logo-row"><div class="ta-logo-sample"><img id="ta-logo-sample" alt="Logo de la licencia"></div><div><button type="button" id="ta-upload-logo" class="ta-button ta-outline">Cambiar logo ↑</button><button type="button" id="ta-original-logo" class="ta-text-button">Usar original</button><span class="ta-help">PNG, JPG, WebP o SVG · Máx. 4 MB</span></div></div><input type="file" id="ta-logo-file" accept="image/png,image/jpeg,image/webp,image/svg+xml,.svg" hidden></div>
  <fieldset class="ta-colors"><legend>Colores de la licencia</legend><div class="ta-color-grid">
  <label>Principal<span class="ta-color-control"><input type="color" id="ta-color-0" aria-label="Color principal"><input type="text" id="ta-hex-0" aria-label="Código del color principal" maxlength="7" pattern="#[a-fA-F0-9]{6}" required></span></label>
@@ -39,7 +38,7 @@
 </section>
 <section id="ta-videos-section" class="ta-section" role="tabpanel" aria-labelledby="ta-tab-videos" hidden><p class="ta-intro">La web muestra automáticamente el video del dispositivo del cliente. Sube aquí cada versión.</p><div id="ta-video-grid" class="ta-video-grid"></div></section>
 </section></div>
- <footer class="ta-bottom"><div><strong>Guardado en este navegador</strong><p>Exporta para compartir tarjetas, diseños y videos.</p></div><button type="button" class="ta-button ta-outline" id="ta-export">Descargar ZIP <span aria-hidden="true">↓</span></button></footer><p id="ta-status" class="ta-status" role="status" aria-live="polite"></p></dialog><dialog id="ta-video-viewer" class="ta-video-viewer" aria-labelledby="ta-viewer-title"><div class="ta-viewer-header"><h3 id="ta-viewer-title">Vista previa</h3><button id="ta-preview-close" type="button" class="ta-button ta-quiet">Cerrar ×</button></div><video id="ta-viewer-video" controls playsinline preload="metadata"></video></dialog><dialog id="ta-delete-card-dialog" class="ta-delete-dialog" aria-labelledby="ta-delete-card-title"><h3 id="ta-delete-card-title">¿Eliminar esta tarjeta?</h3><div class="ta-delete-target"><img id="ta-delete-card-logo" alt=""><strong id="ta-delete-card-name"></strong></div><p>Dejará de aparecer en el portal y en el panel de administración.</p><p id="ta-delete-card-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button id="ta-delete-card-cancel" class="ta-button ta-quiet" type="button" autofocus>Conservar tarjeta</button><button id="ta-delete-card-confirm" class="ta-button ta-confirm-card-delete" type="button">Sí, eliminar</button></div></dialog><dialog id="ta-create-dialog" class="ta-create-dialog" aria-labelledby="ta-new-title"><h3 id="ta-new-title">Nueva tarjeta</h3><p>Crea una tarjeta y personaliza su contenido.</p><form id="ta-new-card-form"><label class="ta-field">Nombre<input id="ta-new-name" maxlength="60" required autocomplete="off" placeholder="Nombre de la tarjeta"></label><p id="ta-new-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button type="submit" class="ta-button ta-primary">Crear tarjeta +</button><button id="ta-create-close" type="button" class="ta-button ta-quiet">Cancelar</button></div></form></dialog>`;
+ <footer class="ta-bottom"><div><strong>Guardado en el servidor</strong><p>Los cambios se sincronizan en todos los navegadores.</p></div><button type="button" class="ta-button ta-outline" id="ta-export">Descargar ZIP <span aria-hidden="true">↓</span></button></footer><p id="ta-status" class="ta-status" role="status" aria-live="polite"></p></dialog><dialog id="ta-video-viewer" class="ta-video-viewer" aria-labelledby="ta-viewer-title"><div class="ta-viewer-header"><h3 id="ta-viewer-title">Vista previa</h3><button id="ta-preview-close" type="button" class="ta-button ta-quiet">Cerrar ×</button></div><video id="ta-viewer-video" controls playsinline preload="metadata"></video></dialog><dialog id="ta-delete-card-dialog" class="ta-delete-dialog" aria-labelledby="ta-delete-card-title"><h3 id="ta-delete-card-title">¿Eliminar esta tarjeta?</h3><div class="ta-delete-target"><img id="ta-delete-card-logo" alt=""><strong id="ta-delete-card-name"></strong></div><p>Dejará de aparecer en el portal y en el panel de administración.</p><p id="ta-delete-card-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button id="ta-delete-card-cancel" class="ta-button ta-quiet" type="button" autofocus>Conservar tarjeta</button><button id="ta-delete-card-confirm" class="ta-button ta-confirm-card-delete" type="button">Sí, eliminar</button></div></dialog><dialog id="ta-create-dialog" class="ta-create-dialog" aria-labelledby="ta-new-title"><h3 id="ta-new-title">Nueva tarjeta</h3><p>Crea una tarjeta y personaliza su contenido.</p><form id="ta-new-card-form"><label class="ta-field">Nombre<input id="ta-new-name" maxlength="60" required autocomplete="off" placeholder="Nombre de la tarjeta"></label><p id="ta-new-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button type="submit" class="ta-button ta-primary">Crear tarjeta +</button><button id="ta-create-close" type="button" class="ta-button ta-quiet">Cancelar</button></div></form></dialog>`;
   document.body.append(root);
   const $ = s => root.querySelector(s),
     login = $('#tutorial-admin-login'),
@@ -56,7 +55,6 @@
     previewUrls = [],
     saving = new Set(),
     exporting = false;
-  // Borradores por licencia: cambiar de pestaña o de licencia no pierde la edición.
   const brandDrafts = new Map();
   let activeAdminTab = 'settings',
     logoBusy = false;
@@ -274,7 +272,7 @@
     updateBrandPreview();
   });
 
-  function saveEditor(e) {
+  async function saveEditor(e) {
     e.preventDefault();
     if (!authenticated || logoBusy || exporting) return;
     if (!$('#ta-card-form').checkValidity()) {
@@ -289,13 +287,17 @@
       return;
     }
     try {
-      saveCardSettings(selectedService, cardDraft(), draft());
+      $('#ta-save-card').disabled = true;
+      $('#ta-save-brand').disabled = true;
+      await saveCardSettings(selectedService, cardDraft(), draft());
       cardDrafts.delete(selectedService);
       brandDrafts.delete(selectedService);
       status('Tarjeta guardada. Los cambios ya aparecen en el portal.');
       renderPanel();
-    } catch (e) {
-      status(errorText(e), true);
+    } catch (err) {
+      status(errorText(err), true);
+    } finally {
+      updateBrandPreview();
     }
   }
 
@@ -336,7 +338,7 @@
       index = serviceIds.indexOf(id),
       name = getLicenseAppearance(id).name;
     try {
-      deleteCatalogCard(id);
+      await deleteCatalogCard(id);
       brandDrafts.delete(id);
       cardDrafts.delete(id);
       selectedService = serviceIds[Math.min(index, serviceIds.length - 1)];
@@ -345,8 +347,8 @@
       $('#ta-delete-card-dialog').close();
       await renderPanel();
       status('Tarjeta eliminada: ' + name + '.');
-    } catch (error) {
-      $('#ta-delete-card-error').textContent = errorText(error);
+    } catch (err) {
+      $('#ta-delete-card-error').textContent = errorText(err);
       $('#ta-delete-card-error').hidden = false;
     }
   });
@@ -362,6 +364,11 @@
     if (!getCardRecord(selectedService)) selectedService = serviceIds[0];
     renderPanel();
   });
+  window.addEventListener('portal-catalog-updated', () => {
+    if (!authenticated || !panel.open) return;
+    const dirty = isDirty(selectedService) || cardDrafts.size > 0 || brandDrafts.size > 0;
+    if (!dirty) renderPanel();
+  });
 
   $('#ta-card-form').addEventListener('submit', saveEditor);
   $('#ta-discard-card').addEventListener('click', discardEditor);
@@ -373,7 +380,7 @@
     $('#ta-new-name').focus();
   });
   $('#ta-create-close').addEventListener('click', () => $('#ta-create-dialog').close());
-  $('#ta-new-card-form').addEventListener('submit', e => {
+  $('#ta-new-card-form').addEventListener('submit', async e => {
     e.preventDefault();
     if (!authenticated || exporting) return;
     const name = $('#ta-new-name').value.trim(),
@@ -386,7 +393,7 @@
     try {
       const id = 'custom-' + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10));
       const colors = type === 'course' ? ['#ffcc80', '#ffeac9', '#f5a64a'] : ['#759aff', '#b8d1ff', '#516cd7'];
-      saveCardSettings(id, {
+      await saveCardSettings(id, {
         id,
         name,
         brand: name,
@@ -408,22 +415,13 @@
       $('#ta-create-dialog').close();
       status('Tarjeta creada. Completa los datos, el logo y los colores.');
       renderPanel();
-    } catch (e) {
-      $('#ta-new-error').textContent = errorText(e);
+    } catch (err) {
+      $('#ta-new-error').textContent = errorText(err);
       $('#ta-new-error').hidden = false;
     }
   });
   $('#ta-new-name').addEventListener('input', () => $('#ta-new-name').setCustomValidity(''));
 
-  const palettes = {
-    chatgpt: '#8bffce',
-    canva: '#c6adff',
-    gemini: '#a8ceff',
-    capcut: '#e5e9ff',
-    grok: '#d4dae3',
-    claude: '#ffc4a1',
-    perplexity: '#91fff3'
-  };
   const size = n => n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.ceil(n / 1024) + ' KB';
   const time = n => Math.floor(n / 60) + ':' + String(Math.floor(n % 60)).padStart(2, '0');
 
@@ -443,7 +441,7 @@
   }
 
   function errorText(e) {
-    return e?.name === 'QuotaExceededError' ? 'No hay espacio disponible en este navegador. Usa archivos más pequeños o libera espacio local.' : e?.message || 'No se pudo guardar el cambio. Inténtalo nuevamente.';
+    return e?.name === 'QuotaExceededError' ? 'No hay espacio disponible en este navegador.' : e?.message || 'No se pudo guardar el cambio.';
   }
   window.openPortalAdmin = function() {
     if (panel.open || login.open) return;
@@ -451,16 +449,14 @@
     $('#ta-login-form').reset();
     $('#ta-password-error').hidden = true;
     login.showModal();
-    $('#ta-password').focus({
-      preventScroll: true
-    });
+    $('#ta-password').focus({ preventScroll: true });
   };
   $('#ta-lock-close').addEventListener('click', () => login.close());
   $('#ta-password').addEventListener('input', () => {
     $('#ta-password-error').hidden = true;
     $('#ta-password').removeAttribute('aria-invalid');
   });
-  $('#ta-login-form').addEventListener('submit', e => {
+  $('#ta-login-form').addEventListener('submit', async e => {
     e.preventDefault();
     if ($('#ta-password').value !== window.ULTRASHOP_CONFIG.adminDemoKey) {
       $('#ta-password-error').hidden = false;
@@ -473,6 +469,15 @@
     panel.showModal();
     status('');
     renderPanel();
+    (async () => {
+      try {
+        const res = await window.portalSeedIfEmpty();
+        if (res?.seeded) {
+          status('Migración: ' + res.seeded + ' tarjetas copiadas a Supabase.');
+          await renderPanel();
+        }
+      } catch {}
+    })();
   });
   $('#ta-panel-close').addEventListener('click', () => panel.close());
   panel.addEventListener('close', () => {
@@ -692,7 +697,6 @@
       renderPanel();
     }
   }
-  // Exportar un ZIP conserva los recursos separados y evita videos en base64.
   $('#ta-export').addEventListener('click', async () => {
     if (!authenticated || exporting) return;
     if (logoBusy || serviceIds.some(id => isDirty(id))) {
