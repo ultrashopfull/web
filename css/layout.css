@@ -1,0 +1,1554 @@
+/* Shared composition grid: one content width and an 8px spacing rhythm. */
+:root {
+  --content-width: 1280px;
+  --page-gutter: 32px;
+  --grid-gap: 24px
+}
+
+html {
+  scroll-padding-top: 96px
+}
+
+body {
+  min-width: 0
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box
+}
+
+body>header {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  min-height: 80px;
+  height: 80px;
+  padding: 0 max(var(--page-gutter), calc((100% - var(--content-width))/2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: nowrap
+}
+
+header .brand {
+  position: relative;
+  display: block;
+  width: 180px;
+  height: 44px;
+  flex: 0 0 180px;
+  overflow: hidden;
+  margin: 0;
+  padding: 0
+}
+
+header .brand .ultrashop-logo {
+  position: absolute;
+  width: 205px;
+  height: 72px;
+  max-width: none;
+  left: -13px;
+  top: -14px;
+  margin: 0;
+  object-fit: contain
+}
+
+header .nav-actions,
+header .client-nav-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  width: auto;
+  margin: 0;
+  gap: 8px
+}
+
+header .seller-cta,
+header .client-nav-actions>.button {
+  min-height: 42px;
+  height: 42px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap
+}
+
+header .header-whatsapp {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  flex: 0 0 42px;
+  padding: 0
+}
+
+.catalogue.section,
+main.dashboard,
+.ultra-footer.quiet-footer {
+  width: calc(100% - 2 * var(--page-gutter));
+  max-width: var(--content-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0
+}
+
+.catalogue.section {
+  margin-top: 0;
+  padding-top: 0;
+  padding-bottom: 0
+}
+
+.catalogue .portal-panel {
+  width: 100%;
+  display: block;
+  margin: 0;
+  padding: 56px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible
+}
+
+.catalogue .section-top {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto 40px;
+  padding: 0;
+  text-align: center
+}
+
+.catalogue h1 {
+  margin: 20px 0 0;
+  line-height: 1.12
+}
+
+.catalogue h1 span {
+  margin-top: 16px;
+  line-height: 1.4
+}
+
+.license-console {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0
+}
+
+.ultra-footer.quiet-footer {
+  margin-top: 40px;
+  margin-bottom: 0;
+  padding-top: 24px;
+  padding-bottom: 24px
+}
+
+.quiet-footer-row {
+  display: grid;
+  grid-template-columns: 110px auto minmax(250px, 1fr) auto;
+  align-items: center;
+  gap: 24px
+}
+
+.quiet-footer-identity {
+  display: contents
+}
+
+.quiet-footer-logo {
+  position: relative;
+  width: 110px;
+  height: 32px;
+  overflow: hidden
+}
+
+.quiet-footer-logo img {
+  position: absolute;
+  left: -8px;
+  top: -6px;
+  width: 126px;
+  height: 44px;
+  max-width: none
+}
+
+.quiet-footer-copyright {
+  margin: 0;
+  padding: 0 0 0 24px;
+  line-height: 18px;
+  font-size: 11px;
+  border-left: 1px solid #ffffff16
+}
+
+.quiet-footer .footer-authorized {
+  min-width: 0;
+  padding: 0 0 0 24px;
+  margin: 0;
+  border-left: 1px solid #ffffff16;
+  font-size: 11px;
+  line-height: 18px;
+  gap: 0
+}
+
+.quiet-footer .footer-top {
+  margin: 0;
+  font-size: 11px;
+  line-height: 18px;
+  gap: 12px;
+  justify-self: end
+}
+
+main.dashboard {
+  padding-top: 32px;
+  padding-bottom: 0;
+  margin-top: 0
+}
+
+.dashboard-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch
+}
+
+.dashboard-grid>.panel {
+  margin: 0;
+  padding: 32px;
+  min-width: 0
+}
+
+.welcome {
+  padding: 24px 0 40px
+}
+
+.dashboard .welcome h1 {
+  margin: 16px 0
+}
+
+.dashboard .welcome p {
+  margin: 0
+}
+
+.dashboard .demo-note {
+  margin: 0
+}
+
+@media(max-width:1100px) {
+  .quiet-footer-row {
+    gap: 16px;
+    grid-template-columns: 110px auto minmax(230px, 1fr) auto
+  }
+
+  .quiet-footer-copyright,
+  .quiet-footer .footer-authorized {
+    padding-left: 16px
+  }
+}
+
+@media(max-width:760px) {
+  :root {
+    --page-gutter: 24px;
+    --grid-gap: 20px
+  }
+
+  .quiet-footer-row {
+    grid-template-columns: 110px 1fr auto;
+    gap: 16px
+  }
+
+  .quiet-footer-logo {
+    grid-column: 1;
+    grid-row: 1
+  }
+
+  .quiet-footer-copyright {
+    grid-column: 2;
+    grid-row: 1
+  }
+
+  .quiet-footer .footer-top {
+    grid-column: 3;
+    grid-row: 1
+  }
+
+  .quiet-footer .footer-authorized {
+    grid-column: 1/-1;
+    grid-row: 2;
+    border-left: 0;
+    padding: 0
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr
+  }
+
+  header .client-nav-actions {
+    flex-wrap: wrap
+  }
+
+  body>header:has(.client-nav-actions) {
+    height: auto;
+    min-height: 80px;
+    padding-top: 16px;
+    padding-bottom: 16px
+  }
+}
+
+@media(max-width:600px) {
+  :root {
+    --page-gutter: 20px;
+    --grid-gap: 20px
+  }
+
+  html {
+    scroll-padding-top: 84px
+  }
+
+  body>header {
+    height: 72px;
+    min-height: 72px;
+    gap: 12px
+  }
+
+  header .brand {
+    width: 124px;
+    height: 38px;
+    flex-basis: 124px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 144px;
+    height: 50px;
+    left: -10px;
+    top: -6px
+  }
+
+  header .nav-actions {
+    gap: 8px;
+    width: auto
+  }
+
+  header .seller-cta {
+    font-size: 10px;
+    height: 38px;
+    min-height: 38px;
+    padding: 0 12px
+  }
+
+  header .header-whatsapp {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    flex-basis: 38px;
+    padding: 0
+  }
+
+  .catalogue .portal-panel {
+    padding-top: 40px
+  }
+
+  .catalogue .section-top {
+    margin-bottom: 32px
+  }
+
+  .catalogue h1 {
+    font-size: 34px;
+    letter-spacing: -1.2px;
+    margin-top: 16px
+  }
+
+  .catalogue h1 span {
+    font-size: 18px;
+    max-width: none;
+    margin-top: 14px
+  }
+
+  .ultra-footer.quiet-footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    padding-bottom: 24px
+  }
+
+  .quiet-footer-row {
+    grid-template-columns: 1fr auto;
+    gap: 16px
+  }
+
+  .quiet-footer-logo {
+    grid-column: 1;
+    grid-row: 1
+  }
+
+  .quiet-footer .footer-top {
+    grid-column: 2;
+    grid-row: 1
+  }
+
+  .quiet-footer-copyright {
+    grid-column: 1/-1;
+    grid-row: 2;
+    border: 0;
+    padding: 0
+  }
+
+  .quiet-footer .footer-authorized {
+    grid-column: 1/-1;
+    grid-row: 3;
+    font-size: 11px;
+    padding: 0
+  }
+
+  .quiet-footer .footer-top {
+    font-size: 10px
+  }
+
+  .dashboard-grid>.panel {
+    padding: 24px
+  }
+
+  .dashboard .welcome {
+    padding: 24px 0 32px
+  }
+
+  header .client-nav-actions {
+    gap: 8px
+  }
+
+  body>header:has(.client-nav-actions) {
+    display: grid;
+    grid-template-columns: 1fr
+  }
+
+  header .client-nav-actions {
+    justify-content: flex-start
+  }
+}
+
+@media(max-width:380px) {
+  :root {
+    --page-gutter: 16px
+  }
+
+  header .brand {
+    width: 110px;
+    flex-basis: 110px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 128px;
+    height: 45px;
+    left: -9px;
+    top: -3px
+  }
+
+  header .seller-cta {
+    padding: 0 10px;
+    font-size: 9px
+  }
+
+  header .header-whatsapp {
+    padding: 0
+  }
+
+  header .nav-actions {
+    gap: 6px
+  }
+
+  .catalogue h1 {
+    font-size: 30px
+  }
+}
+
+.catalogue .catalogue-intro {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: end;
+  margin: 0 0 36px;
+  padding: 0 0 32px;
+  border-bottom: 1px solid #ffffff10;
+  text-align: left
+}
+
+.catalogue .intro-title {
+  min-width: 0
+}
+
+.catalogue .intro-kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 18px;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 1.6px;
+  color: #aabbad;
+  font-weight: 600
+}
+
+.intro-kicker>span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #c7ff2f;
+  flex: none
+}
+
+.catalogue .catalogue-intro h1 {
+  margin: 0;
+  font-size: clamp(34px, 3.4vw, 44px);
+  line-height: 1.12;
+  font-weight: 600;
+  letter-spacing: -1.6px;
+  color: #f3f5f3
+}
+
+.catalogue .catalogue-intro h1>span {
+  display: inline;
+  margin: 0;
+  background: none;
+  color: #9dab9f;
+  font-size: inherit;
+  line-height: inherit;
+  max-width: none
+}
+
+.catalogue .intro-summary {
+  justify-self: end;
+  align-self: end;
+  margin: 0 0 3px;
+  max-width: 380px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #d0d8d2;
+  font-weight: 400;
+  letter-spacing: 0
+}
+
+.catalogue .intro-summary>span {
+  color: #929f96;
+  font-size: 13px
+}
+
+.ultra-footer .footer-guarantee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid #ffffff0a;
+  font-size: 11px;
+  line-height: 18px;
+  color: #8e9c92
+}
+
+.footer-guarantee svg {
+  flex: 0 0 15px;
+  color: #acbe9c
+}
+
+@media(max-width:760px) {
+  .catalogue .catalogue-intro {
+    gap: 24px
+  }
+
+  .catalogue .intro-summary {
+    font-size: 13px
+  }
+
+  .catalogue .intro-summary>span {
+    font-size: 12px
+  }
+}
+
+@media(max-width:600px) {
+  .catalogue .catalogue-intro {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 28px;
+    padding-bottom: 26px
+  }
+
+  .catalogue .catalogue-intro h1 {
+    font-size: 34px;
+    letter-spacing: -1.1px
+  }
+
+  .catalogue .intro-kicker {
+    margin-bottom: 14px;
+    font-size: 9px
+  }
+
+  .catalogue .intro-summary {
+    justify-self: start;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6
+  }
+
+  .catalogue .intro-summary>span {
+    font-size: 12px
+  }
+
+  .ultra-footer .footer-guarantee {
+    font-size: 10px;
+    line-height: 17px;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding-top: 14px
+  }
+}
+
+@media(max-width:420px) {
+  header .brand {
+    width: 104px;
+    flex-basis: 104px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 120px;
+    height: 42px;
+    left: -8px;
+    top: -2px
+  }
+
+  header .seller-cta {
+    font-size: 9px;
+    padding: 0 10px
+  }
+
+  header .header-whatsapp {
+    padding: 0
+  }
+
+  body>header {
+    gap: 10px
+  }
+}
+
+@media(max-width:360px) {
+  header .brand {
+    width: 90px;
+    flex-basis: 90px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 104px;
+    height: 36px;
+    left: -7px;
+    top: 1px
+  }
+
+  body>header {
+    gap: 8px
+  }
+}
+
+/* Single, centered catalogue message. */
+.catalogue .catalogue-intro.single-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+  margin: 0 0 36px;
+  padding: 0 0 36px;
+  border-bottom: 1px solid #ffffff0d
+}
+
+.catalogue .catalogue-intro.single-message h1 {
+  max-width: 780px;
+  margin: 0;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -1px;
+  color: #f1f5f2;
+  text-wrap: balance
+}
+
+.catalogue .catalogue-intro.single-message h1>span {
+  display: block;
+  margin: 8px 0 0;
+  background: none;
+  color: #aab9ae;
+  font-size: .88em;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -.5px
+}
+
+@media(max-width:600px) {
+  .catalogue .catalogue-intro.single-message {
+    margin-bottom: 28px;
+    padding-bottom: 28px
+  }
+
+  .catalogue .catalogue-intro.single-message h1 {
+    font-size: 27px;
+    letter-spacing: -.8px
+  }
+
+  .catalogue .catalogue-intro.single-message h1>span {
+    margin-top: 8px;
+    font-size: 21px;
+    letter-spacing: -.4px
+  }
+}
+
+/* Reveal desktop card actions on hover or keyboard focus. Touch stays visible. */
+
+
+/* Three clear footer groups with one supporting guarantee line. */
+.ultra-footer.quiet-footer {
+  padding-top: 24px;
+  padding-bottom: 24px
+}
+
+.quiet-footer-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 24px;
+  align-items: center
+}
+
+.quiet-footer-row>.quiet-footer-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0
+}
+
+.quiet-footer-identity>.quiet-footer-logo {
+  grid-column: auto;
+  grid-row: auto;
+  margin: 0
+}
+
+.quiet-footer-identity>.quiet-footer-copyright {
+  grid-column: auto;
+  grid-row: auto;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: #89968d;
+  font-size: 10px;
+  line-height: 16px
+}
+
+.quiet-footer-row>.footer-authorized {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: center;
+  gap: 4px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-size: 11px;
+  line-height: 18px
+}
+
+.quiet-footer-row>.footer-top {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+  margin: 0
+}
+
+.ultra-footer.quiet-footer .footer-guarantee {
+  justify-content: center;
+  margin: 20px 0 0;
+  padding: 16px 0 0;
+  text-align: center;
+  font-size: 10px;
+  line-height: 18px
+}
+
+@media(max-width:760px) {
+  .quiet-footer-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 20px 16px
+  }
+
+  .quiet-footer-row>.quiet-footer-identity {
+    grid-column: 1;
+    grid-row: 1
+  }
+
+  .quiet-footer-row>.footer-top {
+    grid-column: 2;
+    grid-row: 1
+  }
+
+  .quiet-footer-row>.footer-authorized {
+    grid-column: 1/-1;
+    grid-row: 2;
+    justify-self: start;
+    align-items: flex-start;
+    text-align: left;
+    gap: 2px
+  }
+
+  .ultra-footer.quiet-footer .footer-guarantee {
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
+    margin-top: 18px;
+    padding-top: 16px
+  }
+}
+
+/* Compact footer without the purchase-contact block. */
+.quiet-footer-row {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 24px;
+  align-items: center
+}
+
+.ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  text-align: center;
+  font-size: 11px;
+  line-height: 18px
+}
+
+@media(max-width:760px) {
+  .quiet-footer-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px 16px
+  }
+
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+    grid-column: 1/-1;
+    grid-row: 2;
+    justify-content: flex-start;
+    justify-self: start;
+    align-items: flex-start;
+    text-align: left;
+    font-size: 10px;
+    line-height: 18px
+  }
+}
+
+/* Richer ambient palette, with dark surfaces for readable content. */
+body::before {
+  background: radial-gradient(ellipse at 8% 8%, #a9e63252 0, transparent 42%), radial-gradient(ellipse at 93% 25%, #16c4bb69 0, transparent 44%), radial-gradient(ellipse at 18% 88%, #7850df80 0, transparent 45%), radial-gradient(ellipse at 88% 92%, #cd4b9852 0, transparent 42%), #090c15;
+  animation-duration: 30s
+}
+
+body>header {
+  background: #0a1018df;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: #b9d5e71a
+}
+
+.ultra-footer.quiet-footer {
+  border-top-color: #b7cad52b
+}
+
+.catalogue .portal-panel {
+  padding-top: 32px
+}
+
+@media(max-width:600px) {
+  .catalogue .portal-panel {
+    padding-top: 24px
+  }
+}
+
+/* WhatsApp uses the lime sampled from the UltraShop logo. */
+body>header .button.header-whatsapp {
+  background: #c1f907;
+  border-color: #c1f907;
+  color: #172000;
+  box-shadow: 0 3px 14px #c1f90718
+}
+
+body>header .button.header-whatsapp:hover {
+  background: #ceff32;
+  border-color: #ceff32;
+  color: #172000;
+  box-shadow: 0 4px 18px #c1f90735
+}
+
+body>header .button.header-whatsapp:focus-visible {
+  outline: 2px solid #c1f907;
+  outline-offset: 4px
+}
+
+/* Gentle header-button motion, without changing their layout. */
+body>header #distributor-link,
+body>header .button.header-whatsapp {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateY(0) scale(1);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1), box-shadow .3s ease, background-color .3s ease, border-color .3s ease
+}
+
+body>header #distributor-link::after,
+body>header .button.header-whatsapp::after {
+  content: '';
+  position: absolute;
+  inset: -50% -30%;
+  background: linear-gradient(110deg, transparent 36%, #ffffff38 50%, transparent 64%);
+  transform: translateX(-130%);
+  pointer-events: none
+}
+
+body>header #distributor-link>span {
+  display: inline-block;
+  transition: transform .35s cubic-bezier(.22, 1, .36, 1)
+}
+
+body>header .button.header-whatsapp svg {
+  transform-origin: center;
+  transition: transform .3s ease
+}
+
+@media(hover:hover) and (pointer:fine) {
+  body>header #distributor-link:hover {
+    transform: translateY(-3px);
+    border-color: #b4c2b278;
+    box-shadow: 0 8px 22px #0004, 0 0 16px #c1f9070d
+  }
+
+  body>header #distributor-link:hover>span {
+    transform: translate(3px, -3px)
+  }
+
+  body>header .button.header-whatsapp:hover {
+    transform: translateY(-3px) scale(1.07);
+    box-shadow: 0 7px 23px #c1f90750
+  }
+
+  body>header .button.header-whatsapp:hover svg {
+    animation: ultra-wa-greeting .55s ease-in-out both
+  }
+
+  body>header #distributor-link:hover::after,
+  body>header .button.header-whatsapp:hover::after {
+    animation: ultra-header-sheen .7s ease-out both
+  }
+}
+
+body>header #distributor-link:active,
+body>header .button.header-whatsapp:active {
+  transform: translateY(0) scale(.96);
+  transition-duration: .12s
+}
+
+@keyframes ultra-header-sheen {
+  from {
+    transform: translateX(-130%)
+  }
+
+  to {
+    transform: translateX(130%)
+  }
+}
+
+@keyframes ultra-wa-greeting {
+
+  0%,
+  100% {
+    transform: rotate(0) scale(1)
+  }
+
+  30% {
+    transform: rotate(-12deg) scale(1.08)
+  }
+
+  60% {
+    transform: rotate(9deg) scale(1.08)
+  }
+
+  80% {
+    transform: rotate(-4deg) scale(1.04)
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+  body>header #distributor-link,
+  body>header .button.header-whatsapp,
+  body>header #distributor-link>span,
+  body>header .button.header-whatsapp svg {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important
+  }
+
+  body>header #distributor-link::after,
+  body>header .button.header-whatsapp::after {
+    display: none;
+    animation: none !important
+  }
+}
+
+.card-actions .button .buy-whatsapp {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  display: block;
+  color: inherit
+}
+
+/* Darker ambient backdrop and fully transparent navigation. */
+body::before {
+  background: radial-gradient(ellipse at 8% 8%, #a9e63212 0, transparent 42%), radial-gradient(ellipse at 93% 25%, #16c4bb18 0, transparent 44%), radial-gradient(ellipse at 18% 88%, #7850df1d 0, transparent 45%), radial-gradient(ellipse at 88% 92%, #cd4b9812 0, transparent 42%), #030408
+}
+
+body>header {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none
+}
+
+/* Navigation changes only after the page scrolls. */
+body>header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: background-color .3s ease, border-color .3s ease, box-shadow .3s ease
+}
+
+html.nav-scrolled body>header {
+  background: #090d14d9;
+  border-bottom-color: #ffffff12;
+  box-shadow: 0 6px 24px #00000020;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px)
+}
+
+@media(prefers-reduced-motion:reduce) {
+  body>header {
+    transition: none
+  }
+}
+
+/* Gemini licence: blue accent throughout its card and client panel. */
+.gemini {
+  --glow: #4285f4;
+  --btn-a: #4285f4;
+  --btn-b: #a8ceff;
+  --btn-c: #2465d8
+}
+
+.cards .gemini .card-visual {
+  background: radial-gradient(ellipse at 50% 85%, #4285f44d, transparent 62%), linear-gradient(150deg, #14233c, #080f1c) !important
+}
+
+.gemini .brand-stage>span {
+  color: #b5d5ff
+}
+
+/* Mobile refinement: bounded overrides preserve the desktop composition. */
+header #distributor-link>.seller-label-mobile {
+  display: none
+}
+
+.grok .card-actions .availability-note {
+  grid-column: 1/-1;
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  margin: 0 0 3px;
+  border: 1px solid #eab66b45;
+  border-radius: 999px;
+  background: #241e16;
+  color: #f5ce94;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3
+}
+
+.availability-note::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor
+}
+
+@media(max-width:700px) {
+  :root {
+    --page-gutter: 16px
+  }
+
+  html {
+    scroll-padding-top: 84px
+  }
+
+  body>header {
+    height: 72px;
+    min-height: 72px;
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 12px
+  }
+
+  header .brand {
+    width: 124px;
+    height: 40px;
+    flex-basis: 124px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 144px;
+    height: 50px;
+    left: -10px;
+    top: -5px
+  }
+
+  header #distributor-link>.seller-label-desktop {
+    display: none
+  }
+
+  header #distributor-link>.seller-label-mobile {
+    display: inline
+  }
+
+  header .nav-actions {
+    gap: 8px;
+    flex-shrink: 0
+  }
+
+  header .seller-cta {
+    min-height: 44px;
+    height: 44px;
+    font-size: 11px;
+    padding: 0 12px;
+    gap: 6px
+  }
+
+  header .header-whatsapp {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    flex-basis: 44px;
+    padding: 0
+  }
+
+  .catalogue .portal-panel {
+    padding-top: 16px
+  }
+
+  .catalogue .cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px
+  }
+
+  .cards .card {
+    min-width: 0;
+    border-radius: 20px
+  }
+
+  .cards .card-visual {
+    height: 200px
+  }
+
+  .cards .card-meta {
+    top: 14px;
+    left: 16px;
+    right: 16px
+  }
+
+  .cards .card-meta>span:first-child {
+    min-height: 30px;
+    padding: 6px 12px;
+    font-size: 12px
+  }
+
+  .cards .brand-stage {
+    inset: 51px 16px 25px;
+    gap: 10px
+  }
+
+  .cards .brand-stage img {
+    width: 65px;
+    height: 65px
+  }
+
+  .cards .brand-stage>span {
+    font-size: 17px
+  }
+
+  .cards .canva .brand-stage img {
+    width: 150px;
+    height: auto
+  }
+
+  .cards .cinema-icon {
+    width: 80px;
+    height: 65px
+  }
+
+  .cards .visual-caption {
+    bottom: 12px;
+    left: 16px;
+    font-size: 9px;
+    letter-spacing: .5px
+  }
+
+  .cards .card-copy {
+    min-height: 0;
+    padding: 18px 20px 16px
+  }
+
+  .cards .card-index {
+    font-size: 10px;
+    line-height: 1.5
+  }
+
+  .cards .card h3 {
+    font-size: 21px;
+    line-height: 1.25;
+    margin: 8px 0
+  }
+
+  .cards .card p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 auto;
+    max-width: 38ch
+  }
+
+  .cards .card-actions {
+    position: relative;
+    inset: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 16px 18px;
+    background: none;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none
+  }
+
+  .cards .card-actions .button {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    font-size: 13px;
+    padding: 12px 10px;
+    gap: 7px;
+    opacity: 1;
+    translate: 0 0;
+    transform: none;
+    touch-action: manipulation
+  }
+
+  .cards .card:hover,
+  .cards .card:focus-within,
+  .cards .card:hover .brand-stage,
+  .cards .card:focus-within .brand-stage {
+    transform: none
+  }
+
+  .cards .card-actions .button:active {
+    transform: scale(.97)
+  }
+
+  .ultra-footer.quiet-footer {
+    margin-top: 28px;
+    padding: 22px 0 max(24px, env(safe-area-inset-bottom))
+  }
+
+  .quiet-footer-row {
+    gap: 16px
+  }
+
+  .quiet-footer .footer-top {
+    min-height: 44px;
+    font-size: 12px;
+    gap: 9px
+  }
+
+  .quiet-footer .footer-top span {
+    width: 32px;
+    height: 32px
+  }
+
+  .quiet-footer-identity>.quiet-footer-copyright {
+    font-size: 11px
+  }
+
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 290px;
+    padding-top: 16px;
+    border-top: 1px solid #ffffff12;
+    width: 100%
+  }
+
+  body>header:has(.client-nav-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    height: auto;
+    gap: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px
+  }
+
+  header .client-nav-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+    gap: 8px
+  }
+
+  header .client-nav-actions>.button {
+    height: 44px;
+    min-height: 44px;
+    padding: 0 8px;
+    font-size: 11px;
+    white-space: normal;
+    text-align: center
+  }
+
+  main.dashboard {
+    padding-top: 20px
+  }
+
+  .dashboard-grid>.panel {
+    padding: 22px 18px;
+    border-radius: 20px
+  }
+
+  .dashboard .welcome {
+    padding: 24px 0
+  }
+
+  .dashboard .welcome h1 {
+    font-size: 34px
+  }
+
+  .dashboard dl div {
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px
+  }
+
+  .dashboard dd {
+    overflow-wrap: anywhere
+  }
+
+  .dashboard .video-placeholder {
+    min-height: 220px;
+    aspect-ratio: auto;
+    padding: 16px
+  }
+
+  dialog {
+    width: calc(100% - 32px);
+    max-width: 460px;
+    max-height: calc(100dvh - 32px);
+    padding: 28px 22px;
+    overflow: auto
+  }
+
+  body::before {
+    animation: none;
+    will-change: auto
+  }
+}
+
+@media(max-width:380px) {
+  header .brand {
+    width: 100px;
+    flex-basis: 100px
+  }
+
+  header .brand .ultrashop-logo {
+    width: 117px;
+    height: 41px;
+    left: -8px;
+    top: 0
+  }
+
+  body>header {
+    gap: 8px
+  }
+
+  header .nav-actions {
+    gap: 6px
+  }
+
+  header .seller-cta {
+    padding: 0 10px;
+    font-size: 10px
+  }
+
+  .cards .card-copy {
+    padding-left: 16px;
+    padding-right: 16px
+  }
+}
+
+header #distributor-link>.seller-label-mobile,
+header #distributor-link>.seller-label-desktop {
+  font-size: inherit;
+  transform: none
+}
+
+/* Centred mobile footer on the portal and licence pages. */
+@media(max-width:700px) {
+  .ultra-footer.quiet-footer .quiet-footer-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center
+  }
+
+  .ultra-footer.quiet-footer .quiet-footer-row>.quiet-footer-identity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 7px
+  }
+
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    align-self: center;
+    margin: 0;
+    max-width: 290px
+  }
+
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-top {
+    align-self: center;
+    justify-self: center;
+    margin: 0
+  }
+}
+
+/* Keep the guarantee symbol centered beside its wrapped text. */
+@media(max-width:700px) {
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+    align-items: center;
+    gap: 9px
+  }
+
+  .ultra-footer.quiet-footer .footer-guarantee>svg {
+    display: block;
+    flex: 0 0 17px;
+    width: 17px;
+    height: 19px;
+    align-self: center;
+    margin: 0;
+    transform: none
+  }
+}
+
+/* Inline guarantee: the shield follows the first word, not the text block. */
+.ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+  display: block;
+  text-align: center;
+  line-height: 1.7
+}
+
+.footer-guarantee .guarantee-lead {
+  display: inline;
+  white-space: nowrap
+}
+
+.ultra-footer.quiet-footer .footer-guarantee .guarantee-lead>svg {
+  display: inline-block;
+  position: static;
+  width: 16px;
+  height: 18px;
+  margin: 0 6px 0 0;
+  vertical-align: -4px;
+  transform: none;
+  flex: none;
+  color: inherit
+}
+
+@media(max-width:700px) {
+  .ultra-footer.quiet-footer .quiet-footer-row>.footer-guarantee {
+    display: block;
+    text-align: center;
+    max-width: 290px;
+    line-height: 1.7
+  }
+}
+
+/* Disponibilidad: comparte posición, tamaño y animación con las acciones normales. */
+.cards .card-unavailable {
+  cursor: not-allowed;
+}
+
+.cards .card-unavailable>.card-visual,
+.cards .card-unavailable>.card-copy {
+  opacity: 1;
+}
+
+/* Hereda el fondo y la transición de las tarjetas disponibles. */
+.cards .card-unavailable .stock-actions {
+  pointer-events: none;
+}
+
+.cards .card-unavailable:focus-visible {
+  outline: 2px solid var(--btn-b);
+  outline-offset: 3px;
+}
+
+.cards .stock-actions .stock-button {
+  grid-column: 1/-1;
+  justify-self: center;
+  min-width: 116px;
+  border: 1px solid color-mix(in srgb, var(--btn-b) 70%, white);
+  background: linear-gradient(115deg, var(--btn-b), var(--btn-a));
+  color: #111b22;
+  box-shadow: inset 0 1px 0 #ffffff40, 0 5px 20px color-mix(in srgb, var(--glow) 15%, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Marcas de las nuevas tarjetas. */
+.cards .gpt-codex .brand-stage img {
+  filter: brightness(0) invert(1);
+}
+
+.gpt-codex .pass-product>img,
+.gpt-codex .cover-license img {
+  filter: brightness(0) invert(1);
+}

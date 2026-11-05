@@ -1,0 +1,139 @@
+/* Se conservan colores, jerarquía y distribución. Se eliminan efectos continuos costosos. */
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+body,
+button,
+input,
+select,
+textarea,
+.admin-ui {
+  font-family: inherit;
+}
+
+body::before {
+  animation: none !important;
+  will-change: auto !important;
+  inset: 0 !important;
+}
+
+.pass-status i,
+.license-pass::before,
+.license-pass::after,
+.ring-inner,
+.subscription-ring.is-counting .ring-inner,
+.mv-renew,
+.portal-art i,
+.floating-brands>span,
+.cinema-icon {
+  animation: none !important;
+}
+
+.balance-digit>span {
+  will-change: auto;
+}
+
+.page-hidden *,
+.page-hidden *::before,
+.page-hidden *::after {
+  animation-play-state: paused !important;
+}
+
+/* Content outside the viewport can skip layout/paint in supporting browsers. */
+@supports (content-visibility: auto) {
+  .cards .card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 390px;
+  }
+}
+
+html.lite-mode {
+  scroll-behavior: auto;
+}
+
+.lite-mode *,
+.lite-mode *::before,
+.lite-mode *::after {
+  animation: none !important;
+  transition-duration: .12s !important;
+  will-change: auto !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.lite-mode .reveal,
+.lite-mode .reveal.animate {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+.lite-mode .cards .card,
+.lite-mode .card-visual::before,
+.lite-mode .license-pass,
+.lite-mode .license-access,
+.lite-mode .ta-panel {
+  box-shadow: none !important;
+}
+
+.lite-mode .card-meta>span,
+.lite-mode .tutorial-expanded-close {
+  background-color: #19232d;
+}
+
+.lite-mode.nav-scrolled body>header {
+  background-color: #090d14;
+}
+
+.lite-mode .brand-stage img {
+  filter: none;
+}
+
+.lite-mode .chatgpt .brand-stage img,
+.lite-mode .grok .brand-stage img,
+.lite-mode .capcut .brand-stage img,
+.lite-mode .gpt-codex .brand-stage img {
+  filter: brightness(0) invert(1);
+}
+
+@supports not (height: 100dvh) {
+  iframe {
+    height: 100vh;
+  }
+
+  .license-access,
+  .admin-ui dialog {
+    max-height: calc(100vh - 24px);
+  }
+
+  .admin-ui .ta-panel {
+    height: calc(100vh - 24px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Acciones visibles en todos los equipos, sin superposición animada sobre el texto. */
+.cards .card-actions {
+  position: relative;
+  inset: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 0 16px 18px;
+  gap: 8px;
+  opacity: 1;
+  transform: none;
+  background: none;
+  pointer-events: auto;
+}
+.cards .card-actions .button { width: 100%; min-width: 0; opacity: 1; translate: 0 0; }
+.cards .card-unavailable .stock-actions { pointer-events: none; }

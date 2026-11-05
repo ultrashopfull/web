@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="es">
+<head>
+<base href="../">
+<script src="js/contexto.js">
+</script>
+<script src="js/rendimiento.js">
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mi licencia — UltraShop</title>
+<link rel="stylesheet" href="css/light.css">
+<link rel="stylesheet" href="css/dark.css">
+<link rel="stylesheet" href="css/experience.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/cliente.css">
+<script src="js/theme.js">
+</script>
+<link rel="stylesheet" href="css/rendimiento.css">
+</head>
+<body class="license-page">
+<header id="inicio">
+<a class="brand" href="index.html">
+<img decoding="async" class="ultrashop-logo" src="assets/ultrashop.png" alt="UltraShop" width="205" height="72">
+</a>
+<div class="client-nav-actions">
+<a class="button seller-cta nav-back" href="index.html" aria-label="Volver al inicio" title="Volver al inicio">
+<svg class="nav-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="m11 5-7 7 7 7M4 12h16"/>
+</svg>
+<span class="nav-text">Volver al inicio</span>
+</a>
+<button class="button secondary nav-logout" type="button" onclick="parent.portalLogout()" aria-label="Cerrar sesión" title="Cerrar sesión">
+<svg class="nav-symbol" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M9 4H4v16h5m6-13 5 5-5 5m-9-5h14"/>
+</svg>
+<span class="nav-text">Cerrar sesión</span>
+</button>
+<a class="button seller-cta header-whatsapp" title="Consultar por WhatsApp" href="https://wa.me/59169525206?text=Hola%20UltraShop%2C%20quisiera%20hacer%20una%20consulta%20sobre%20sus%20licencias%20y%20cursos." target="_blank" rel="noopener noreferrer" aria-label="Consultar por WhatsApp con UltraShop">
+<svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M20.4 11.6a8.4 8.4 0 0 1-12.5 7.3L3 20.3l1.4-4.7a8.4 8.4 0 1 1 16-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M8.2 7.3c-.5.1-1 1-.8 2.1.5 2.7 3.3 5.4 6 5.8 1 .2 2-.4 2.1-1l.1-.9-2.3-1.1-.9 1c-1.5-.5-2.7-1.7-3.2-3.1l1-.9-1.1-2Z" fill="currentColor"/>
+</svg>
+</a>
+</div>
+</header>
+<main class="member-view">
+ <h1 id="license-name" class="license-page-title">Mi licencia</h1>
+ 
+ <section class="license-pass" aria-label="Tutorial, licencia y datos de suscripción">
+  <div class="pass-topline">
+<span>LICENCIA ORIGINAL</span>
+<span id="license-status" class="pass-status">
+<i aria-hidden="true">
+</i> Activa</span>
+</div>
+  <div class="license-content">
+<section class="mv-tutorial" aria-label="Tutorial de instalación de la licencia">
+<div class="tutorial-player" id="tutorial-panel" role="region" aria-label="Tutorial de instalación para tu dispositivo">
+<div class="tutorial-video-shell">
+ <video id="license-video" controls playsinline preload="none" tabindex="0" aria-label="Tutorial de instalación de la licencia" hidden>Tu navegador no admite la reproducción de este video.</video>
+ <button id="tutorial-cover" class="tutorial-cover" type="button" aria-label="Reproducir tutorial de instalación de la licencia">
+  <span class="cover-grid" aria-hidden="true">
+</span>
+  <span class="cover-heading">
+<span class="cover-license">
+<img id="tutorial-brand" alt="">
+<span id="tutorial-license-name">
+</span>
+</span>
+<span class="cover-category">
+<span class="cover-video-dot" aria-hidden="true">
+</span>VIDEO TUTORIAL</span>
+</span>
+  <span class="cover-main">
+<span class="cover-copy">
+<span class="cover-eyebrow">GUÍA PASO A PASO</span>
+<span class="cover-title">Tutorial de<span class="cover-title-emphasis">instalación</span>
+<span class="cover-title-tail">de la licencia</span>
+</span>
+</span>
+<span class="cover-art" aria-hidden="true">
+<span id="cover-device-watermark" class="cover-device-watermark">
+</span>
+<span class="cover-play-halo">
+</span>
+<span class="cover-play">
+<svg viewBox="0 0 24 24" fill="currentColor">
+<path d="m9 5 11 7-11 7Z"/>
+</svg>
+</span>
+</span>
+</span>
+  <span class="cover-bottom">
+<span class="cover-device-chip">
+<span id="cover-device-icon" aria-hidden="true">
+</span>
+<span id="cover-device-name">Tu dispositivo</span>
+</span>
+<span class="cover-watch">
+<span id="tutorial-play-label">Ver tutorial</span>
+<span class="cover-watch-arrow" aria-hidden="true">
+<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M4 10h12m-5-5 5 5-5 5"/>
+</svg>
+</span>
+</span>
+</span>
+ </button>
+ 
+      <!-- Controles propios: reproducción, avance, velocidad y pantalla completa. -->
+      <div id="tutorial-controls" class="tutorial-controls" hidden>
+        <div class="tutorial-timeline">
+          <span id="tutorial-current">0:00</span>
+          <input id="tutorial-seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Posición del video">
+          <span id="tutorial-duration">0:00</span>
+        </div>
+        <div class="tutorial-control-row">
+          <button id="tutorial-toggle" type="button" aria-label="Pausar" title="Pausar">
+</button>
+          <button id="tutorial-forward" type="button" aria-label="Adelantar 10 segundos" title="Adelantar 10 segundos">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M18 8a8 8 0 1 0 2 7M18 3v5h-5"/>
+</svg>
+<span>10 s</span>
+</button>
+          <button id="tutorial-speed" type="button" aria-label="Velocidad 1×. Cambiar a 2×" title="Cambiar velocidad a 2×">1×</button>
+          <button id="tutorial-fullscreen" type="button" aria-label="Pantalla completa" title="Pantalla completa">
+</button>
+        </div>
+      </div>
+<span id="tutorial-loading" class="tutorial-loading" role="status" hidden>Cargando video…</span>
+</div>
+</div>
+<p id="tutorial-device-status" class="tutorial-device-status" role="status">
+</p>
+<p id="tutorial-video-error" class="tutorial-video-error" role="status" hidden>
+</p>
+</section>
+<div class="license-client-data" role="group" aria-label="Datos del cliente y de la suscripción">
+
+  <div id="expiry-notice" class="expiry-notice" role="status" hidden>
+<span class="expiry-symbol" aria-hidden="true">!</span>
+<div>
+<strong>Tu suscripción ha finalizado</strong>
+<p>Ya utilizaste todos los días de tu plan. Renueva tu licencia para seguir disfrutando del servicio.</p>
+</div>
+</div>
+  <div class="pass-body">
+   <div class="pass-identity">
+<div class="pass-product">
+<img id="service-logo" alt="" width="64" height="64">
+<div>
+<span class="pass-label">Licencia comprada</span>
+<h2 id="purchased-license">
+</h2>
+</div>
+</div>
+    <dl class="pass-account">
+<div class="pass-email">
+<dt>
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="3" y="5" width="18" height="14" rx="3"/>
+<path d="m4 7 8 6 8-6"/>
+</svg>
+<span>Tu usuario de acceso</span>
+</dt>
+<dd id="member-user">sofia.rivera@example.com</dd>
+</div>
+<div class="pass-purchase">
+<dt>
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="3" y="5" width="18" height="16" rx="3"/>
+<path d="M7 3v4m10-4v4M3 11h18"/>
+</svg>
+<span>Fecha de inicio</span>
+</dt>
+<dd>
+<time id="start-date" datetime="2026-10-19">19 oct 2026</time>
+</dd>
+</div>
+<div class="pass-purchase pass-end">
+<dt>
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<rect x="3" y="5" width="18" height="16" rx="3"/>
+<path d="M7 3v4m10-4v4M3 11h18"/>
+</svg>
+<span>Fecha final</span>
+</dt>
+<dd>
+<time id="end-date" datetime="2026-11-18">18 nov 2026</time>
+</dd>
+</div>
+</dl>
+   </div>
+   <div class="pass-subscription">
+<span class="pass-label subscription-caption">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+<circle cx="12" cy="12" r="8.5"/>
+<path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<span>Tiempo de tu licencia</span>
+</span>
+<div id="subscription-progress" class="subscription-ring" role="meter" aria-label="Días de suscripción restantes" aria-valuemin="0" aria-valuemax="30" aria-valuenow="24">
+<svg class="ring-art" viewBox="0 0 200 200" aria-hidden="true">
+<circle class="ring-outer" cx="100" cy="100" r="98"/>
+<circle class="ring-track" cx="100" cy="100" r="85"/>
+<circle class="ring-value" cx="100" cy="100" r="85" pathLength="100"/>
+<circle class="ring-inner" cx="100" cy="100" r="72"/>
+</svg>
+<div class="ring-number">
+<strong id="remaining-days">24</strong>
+<span>días disponibles</span>
+</div>
+</div>
+<p id="subscription-plan">de 30 días contratados</p>
+<a id="renew-license" class="mv-button mv-renew" target="_blank" rel="noopener noreferrer">
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M20.4 11.6a8.4 8.4 0 0 1-12.5 7.3L3 20.3l1.4-4.7a8.4 8.4 0 1 1 16-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M8.2 7.3c-.5.1-1 1-.8 2.1.5 2.7 3.3 5.4 6 5.8 1 .2 2-.4 2.1-1l.1-.9-2.3-1.1-.9 1c-1.5-.5-2.7-1.7-3.2-3.1l1-.9-1.1-2Z" fill="currentColor"/>
+</svg>
+<span>Renovar licencia</span>
+<svg class="renew-arrow" viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M5 15 15 5M5 5h10v10"/>
+</svg>
+</a>
+</div>
+  </div>
+  <div class="pass-actions">
+<button id="download" class="mv-button mv-primary" type="button">
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>
+</svg>
+<span>Descargar extensión</span>
+</button>
+<a id="official" class="mv-button mv-secondary" target="_blank" rel="noopener noreferrer">
+<span id="official-label">Abrir licencia</span>
+<svg class="mv-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M6 18 18 6M6 6h12v12"/>
+</svg>
+</a>
+</div>
+  <p id="download-notice" class="mv-download-notice" role="status" aria-live="polite" hidden>
+</p>
+ </div>
+</div>
+</section>
+</main>
+<footer class="ultra-footer quiet-footer" aria-label="Pie de página">
+<div class="quiet-footer-row">
+<div class="quiet-footer-identity">
+<a class="quiet-footer-logo" href="index.html" aria-label="UltraShop · Inicio">
+<img src="assets/ultrashop.png" alt="UltraShop" width="126" height="44">
+</a>
+<span class="quiet-footer-copyright">© 2026 UltraShop</span>
+</div>
+<p class="footer-guarantee">
+<span class="guarantee-lead">
+<svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+<path d="m10 2 6 2.5v5c0 3.6-3.5 6.7-6 8-2.5-1.3-6-4.4-6-8v-5L10 2Z" stroke="currentColor" stroke-width="1.4"/>
+<path d="m7 9.5 2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>Licencias</span> originales con garantía y soporte por el tiempo solicitado</p>
+<a class="footer-top" href="#inicio">Volver arriba <span aria-hidden="true">↑</span>
+</a>
+</div>
+</footer>
+<script src="js/cliente.js">
+</script>
+</body>
+</html>
+

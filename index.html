@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,interactive-widget=resizes-content">
+<meta name="theme-color" content="#09090c">
+<title>UltraShop — Licencias digitales</title>
+<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="css/rendimiento.css">
+<script src="js/rendimiento.js">
+</script>
+</head>
+<body>
+<iframe id="portal-view" title="UltraShop · Catálogo y panel de cliente" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen>
+</iframe>
+<dialog id="license-access" class="license-access" aria-labelledby="access-title" aria-describedby="access-description">
+<div class="access-top">
+<span>ACCESO A TU LICENCIA</span>
+<button class="access-close" id="access-close" type="button" aria-label="Cerrar ventana">×</button>
+</div>
+<div class="access-identity">
+<div class="access-emblem" aria-hidden="true">
+<img id="access-logo" alt="">
+</div>
+<h2 id="access-title">Ingresar a mi licencia</h2>
+</div>
+<p id="access-description">Ingresa el usuario y la contraseña que recibiste con tu compra.</p>
+<form id="license-access-form">
+<label for="license-user">Usuario / correo electrónico</label>
+<input id="license-user" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Tu correo electrónico" required maxlength="254" aria-describedby="access-error">
+<label for="license-password">Contraseña</label>
+<input id="license-password" name="password" type="password" autocomplete="current-password" autocapitalize="none" spellcheck="false" placeholder="Tu contraseña" required maxlength="1024" aria-describedby="access-error">
+<p class="access-error" id="access-error" role="alert" hidden></p>
+<button class="enter-button" type="submit">Ingresar a mi licencia ↗</button>
+</form>
+</dialog>
+<noscript>Activa JavaScript para explorar el portal y acceder a tus licencias.</noscript>
+
+<script src="config/portal.js">
+</script>
+<script src="config/catalogo.js">
+</script>
+<script src="config/datos.js">
+</script>
+<script src="js/vistas-locales.js"></script>
+<script src="js/portal.js">
+</script>
+<script src="js/tutoriales.js">
+</script>
+</body>
+</html>

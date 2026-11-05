@@ -1,0 +1,1050 @@
+.theme-toggle {
+  flex-shrink: 0;
+  border: 1px solid #ffffff30;
+  border-radius: 999px;
+  padding: 10px 13px;
+  min-height: 40px;
+  background: #ffffff08;
+  color: #ecf2eb;
+  font: 600 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  cursor: pointer
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid #9fcb37;
+  outline-offset: 3px
+}
+
+.courses-section {
+  max-width: 1400px;
+  padding: 38px 30px 20px
+}
+
+.courses-heading {
+  text-align: center;
+  margin: 0 auto 27px
+}
+
+.courses-heading h2 {
+  font-size: 34px;
+  margin: 12px 0
+}
+
+.courses-heading p {
+  font-size: 15px;
+  color: #a6b1ac
+}
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 19px
+}
+
+.course-card {
+  position: relative;
+  overflow: hidden;
+  padding: 23px;
+  border: 1px solid #ffffff20;
+  border-radius: 22px;
+  background: #121917;
+  transition: transform .6s cubic-bezier(.22, 1, .36, 1), border-color .4s;
+  display: flex;
+  flex-direction: column
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--glow)
+}
+
+.course-art {
+  height: 110px;
+  display: grid;
+  place-items: center;
+  font-size: 54px;
+  color: var(--glow);
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--glow) 18%, transparent), transparent 68%);
+  transition: transform .7s
+}
+
+.course-card:hover .course-art {
+  transform: scale(1.1) rotate(-3deg)
+}
+
+.course-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--glow);
+  margin: 15px 0 12px
+}
+
+.course-card h3 {
+  font-size: 21px;
+  line-height: 1.25;
+  letter-spacing: -.5px;
+  margin: 0 0 12px
+}
+
+.course-card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #a8b4ae;
+  margin: 0 0 22px
+}
+
+.course-button {
+  margin-top: auto;
+  align-self: flex-start;
+  border: 1px solid color-mix(in srgb, var(--glow) 50%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--btn-b);
+  font-size: 12px;
+  padding: 10px 16px
+}
+
+.course-button:hover {
+  background: var(--glow);
+  color: #10201c
+}
+
+dialog {
+  --glow: #c7ff2f;
+  --btn-a: #c7ff2f;
+  --btn-b: #deff96;
+  background: radial-gradient(ellipse at 50% 0, color-mix(in srgb, var(--glow) 16%, transparent), transparent 70%), #101617;
+  border-color: color-mix(in srgb, var(--glow) 55%, #293635)
+}
+
+dialog .eyebrow,
+dialog #access-platform,
+dialog #access-domain {
+  color: var(--glow)
+}
+
+dialog .button {
+  background: linear-gradient(110deg, var(--btn-a), var(--btn-b));
+  color: #0c1713;
+  border-color: var(--glow)
+}
+
+dialog #access-user {
+  border-color: color-mix(in srgb, var(--glow) 40%, #28332f);
+  background: #0c1112
+}
+
+dialog #access-user:focus-visible {
+  outline-color: var(--glow)
+}
+
+#course-detail {
+  max-width: 510px;
+  padding: 38px;
+  text-align: left
+}
+
+#course-detail h2 {
+  font-size: 29px;
+  margin: 17px 0
+}
+
+#course-detail h3 {
+  font-size: 16px;
+  margin-top: 23px
+}
+
+#course-modules {
+  padding-left: 21px;
+  color: #ced9d2;
+  font-size: 15px;
+  line-height: 1.8
+}
+
+#course-detail .course-pending {
+  font-size: 12px;
+  color: #a4b1a9;
+  margin: 22px 0
+}
+
+#course-detail .button {
+  font-size: 13px
+}
+
+html[data-theme=light] {
+  color-scheme: light
+}
+
+html[data-theme=light] body {
+  color: #17241e;
+  background: #eef3ee
+}
+
+html[data-theme=light] body::before {
+  background: radial-gradient(ellipse at 15% 15%, #c8e7b680, transparent 45%), radial-gradient(ellipse at 85% 60%, #bfe5da80, transparent 50%), #f3f6f0
+}
+
+html[data-theme=light] header {
+  background: #f5f8f0ed;
+  border-color: #ced9cd
+}
+
+html[data-theme=light] .brand,
+html[data-theme=light] h1,
+html[data-theme=light] h2,
+html[data-theme=light] h3 {
+  color: #17241e
+}
+
+html[data-theme=light] .nav-contact,
+html[data-theme=light] .footer-links a {
+  color: #405449
+}
+
+html[data-theme=light] .theme-toggle,
+html[data-theme=light] header .seller-cta {
+  color: #24382c;
+  background: #e1e8df;
+  border-color: #becbbd
+}
+
+html[data-theme=light] .catalogue h1 span,
+html[data-theme=light] .courses-heading p,
+html[data-theme=light] .contact-heading p,
+html[data-theme=light] .trust-section p,
+html[data-theme=light] .footer-tagline {
+  color: #53675a
+}
+
+html[data-theme=light] .filters {
+  background: #e5ebe2;
+  border-color: #becdbb
+}
+
+html[data-theme=light] .filter {
+  color: #3e5143
+}
+
+html[data-theme=light] .cards .card {
+  background: #fbfdf8;
+  border-color: #cad5c7
+}
+
+html[data-theme=light] .cards .card:hover,
+html[data-theme=light] .cards .card:focus-within {
+  background: color-mix(in srgb, var(--glow) 15%, #fff)
+}
+
+html[data-theme=light] .card-copy h3,
+html[data-theme=light] .cards .card:hover h3 {
+  color: #1a2920
+}
+
+html[data-theme=light] .card-copy p,
+html[data-theme=light] .card-index {
+  color: #526358
+}
+
+html[data-theme=light] .course-card,
+html[data-theme=light] .contact-options article {
+  background: #ffffffb8;
+  border-color: #c6d4c4
+}
+
+html[data-theme=light] .course-card p,
+html[data-theme=light] .contact-options p {
+  color: #506255
+}
+
+html[data-theme=light] .course-label {
+  color: #3e5a4a
+}
+
+html[data-theme=light] .course-button {
+  background: #e6eee2;
+  color: #223c2d
+}
+
+html[data-theme=light] .trust-number {
+  color: #1d3725
+}
+
+html[data-theme=light] .trust-number span {
+  color: #547b00
+}
+
+html[data-theme=light] .trust-link {
+  color: #42642f
+}
+
+html[data-theme=light] .trust-section,
+html[data-theme=light] .professional-footer,
+html[data-theme=light] .footer-base {
+  border-color: #c6d3c2
+}
+
+html[data-theme=light] .eyebrow,
+html[data-theme=light] .catalogue-note,
+html[data-theme=light] .choose-label,
+html[data-theme=light] .footer-base,
+html[data-theme=light] .professional-footer .disclaimer,
+html[data-theme=light] .contact-options small,
+html[data-theme=light] .motion-toggle {
+  color: #53674e
+}
+
+html[data-theme=light] .panel {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--glow) 9%, white), #fff);
+  border-color: color-mix(in srgb, var(--glow) 50%, #a9b5ab)
+}
+
+html[data-theme=light] .welcome p,
+html[data-theme=light] .panel p,
+html[data-theme=light] dt,
+html[data-theme=light] dd,
+html[data-theme=light] .days {
+  color: #354d3e
+}
+
+html[data-theme=light] .days strong {
+  color: #243d2c
+}
+
+html[data-theme=light] .status,
+html[data-theme=light] .demo-note {
+  background: #e7eee3;
+  color: #3b5442
+}
+
+html[data-theme=light] .launch,
+html[data-theme=light] .assistance .button {
+  color: #304e3c
+}
+
+html[data-theme=light] dialog {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--glow) 13%, white), #fff);
+  color: #23352b
+}
+
+html[data-theme=light] dialog p,
+html[data-theme=light] #course-modules,
+html[data-theme=light] #access-help,
+html[data-theme=light] #license-access .access-disclosure,
+html[data-theme=light] #access-form label {
+  color: #4b6253
+}
+
+html[data-theme=light] dialog #access-platform,
+html[data-theme=light] dialog #access-domain {
+  color: #344f3b
+}
+
+html[data-theme=light] dialog #access-user {
+  background: white;
+  color: #20372a
+}
+
+html[data-theme=light] .close {
+  color: #405b48
+}
+
+html[data-theme=light] .legal p {
+  color: #4b6253
+}
+
+@media(max-width:1100px) {
+  .course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  }
+}
+
+@media(max-width:700px) {
+  .courses-section {
+    padding: 30px 18px 15px
+  }
+
+  .course-grid {
+    grid-template-columns: 1fr
+  }
+
+  .course-card {
+    padding: 22px
+  }
+
+  .course-art {
+    height: 85px
+  }
+
+  .courses-heading h2 {
+    font-size: 28px
+  }
+
+  header {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 76px;
+    padding-top: 12px;
+    padding-bottom: 12px
+  }
+
+  header .nav-actions {
+    margin-left: auto;
+    gap: 7px
+  }
+
+  .theme-toggle {
+    font-size: 11px;
+    padding: 8px 10px;
+    min-height: 36px
+  }
+
+  header .brand {
+    font-size: 15px
+  }
+
+  header .seller-cta {
+    font-size: 9px;
+    padding: 8px
+  }
+
+  #course-detail {
+    padding: 30px 23px
+  }
+
+  .nav-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+  .course-card,
+  .course-art {
+    transition: none
+  }
+
+  .course-card:hover,
+  .course-card:hover .course-art {
+    transform: none
+  }
+}
+
+
+.portal-exit {
+  background: transparent;
+  color: inherit;
+  border: 1px solid #676b6770;
+  border-radius: 30px;
+  padding: 9px 13px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer
+}
+
+.portal-exit:hover {
+  border-color: #c7ff2f
+}
+
+@media(max-width:700px) {
+  .nav-actions {
+    gap: 6px
+  }
+
+  .portal-exit {
+    padding: 8px 10px;
+    font-size: 11px
+  }
+}
+
+/* UltraShop brand and footer */
+header .brand {
+  flex-shrink: 0;
+  line-height: 0
+}
+
+.ultrashop-logo {
+  display: block;
+  width: 205px;
+  height: 72px;
+  object-fit: contain
+}
+
+header .ultrashop-logo {
+  margin-left: -10px
+}
+
+.ultra-footer {
+  position: relative;
+  width: calc(100% - 56px);
+  max-width: 1200px;
+  margin: 64px auto 0;
+  padding: 38px 0 24px;
+  border-top: 1px solid #c7ff2f40;
+  color: #f4f5f2;
+  background: transparent
+}
+
+.ultra-footer-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px;
+  padding-bottom: 34px
+}
+
+.ultra-footer-brand .ultrashop-logo {
+  width: 200px;
+  height: 70px;
+  margin-left: -10px
+}
+
+.ultra-footer p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #a6b0a9;
+  margin: 9px 0 0
+}
+
+.ultra-footer-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.6px;
+  color: #b7c0b8
+}
+
+.ultra-whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin: 14px 0 0;
+  color: #d1ff61;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 600;
+  letter-spacing: -.8px;
+  text-decoration: none
+}
+
+.ultra-whatsapp span {
+  transition: transform .25s
+}
+
+.ultra-whatsapp:hover span {
+  transform: translate(3px, -3px)
+}
+
+.ultra-footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  align-items: center;
+  border-top: 1px solid #ffffff15;
+  padding-top: 22px;
+  color: #8e9b92;
+  font-size: 11px;
+  line-height: 1.6
+}
+
+.ultra-footer-bottom>a {
+  color: #c9d3cc;
+  text-decoration: none
+}
+
+.ultra-footer-bottom>span:last-child {
+  margin-left: auto
+}
+
+.ultra-footer a:focus-visible {
+  outline: 2px solid #c7ff2f;
+  outline-offset: 5px;
+  border-radius: 4px
+}
+
+@media(max-width:700px) {
+  header .ultrashop-logo {
+    width: 155px;
+    height: 54px
+  }
+
+  .ultra-footer {
+    width: calc(100% - 36px);
+    margin-top: 40px;
+    padding-top: 24px
+  }
+
+  .ultra-footer-main {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 26px;
+    padding-bottom: 26px
+  }
+
+  .ultra-footer-bottom {
+    gap: 12px 24px
+  }
+
+  .ultra-footer-bottom>span:last-child {
+    width: 100%;
+    margin-left: 0
+  }
+
+  .ultra-footer-brand .ultrashop-logo {
+    width: 180px;
+    height: 63px
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .ultra-whatsapp span {
+    transition: none
+  }
+}
+
+/* Canva Pro artwork and cinematic course */
+.cards .canva .brand-stage img {
+  width: min(210px, 86%);
+  height: auto;
+  max-height: 140px;
+  object-fit: contain;
+  filter: none;
+  border-radius: 14px;
+  box-shadow: 0 14px 36px #7e26f54a
+}
+
+.cards .canva .brand-stage>span {
+  display: none
+}
+
+.cards .canva {
+  --glow: #9d63ff;
+  --btn-a: #6551f4;
+  --btn-b: #b76bff;
+  --btn-c: #20bfe9
+}
+
+.cards .canva .card-actions .contact {
+  color: #fff
+}
+
+.cinema-course {
+  --glow: #ffcc80;
+  --btn-a: #ffd394;
+  --btn-b: #ffeac9;
+  --btn-c: #f5a64a
+}
+
+.cinema-course .cinema-icon {
+  color: #ffd598;
+  filter: drop-shadow(0 0 24px #ffbd6055);
+  animation: cinema-float 5s ease-in-out infinite
+}
+
+.cards .cinema-course .card-visual {
+  background: radial-gradient(ellipse at 50% 65%, #6d421e77, transparent 67%), linear-gradient(145deg, #231b17, #0d0e12) !important
+}
+
+.cinema-course .card-actions .course-inquiry {
+  width: 100%;
+  grid-column: 1/-1
+}
+
+.cinema-course .card-copy h3 {
+  font-size: clamp(20px, 2vw, 24px);
+  line-height: 1.25
+}
+
+@keyframes cinema-float {
+
+  0%,
+  100% {
+    transform: translateY(0)
+  }
+
+  50% {
+    transform: translateY(-6px)
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .cinema-course .cinema-icon {
+    animation: none
+  }
+}
+
+/* Compact footer and top WhatsApp contact */
+.ultra-footer.discreet-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin: 36px auto 0;
+  padding: 20px 0 24px;
+  border-top: 1px solid #ffffff12;
+  background: none;
+  color: #929a94;
+  font-size: 11px;
+  line-height: 1.6;
+  box-shadow: none
+}
+
+.discreet-footer .footer-legal {
+  color: #808982
+}
+
+header .header-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 15px;
+  border: 1px solid #87b99a45;
+  border-radius: 999px;
+  background: #173b252b;
+  color: #bce8c9;
+  font: 600 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .2s, border-color .2s
+}
+
+header .header-whatsapp:hover {
+  background: #204b353f;
+  border-color: #9ad6af90
+}
+
+header .header-whatsapp:focus-visible {
+  outline: 2px solid #bce8c9;
+  outline-offset: 4px
+}
+
+.header-whatsapp svg {
+  flex-shrink: 0
+}
+
+.client-nav-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap
+}
+
+@media(max-width:700px) {
+  header .header-whatsapp {
+    font-size: 11px;
+    min-height: 36px;
+    padding: 8px 11px;
+    gap: 6px
+  }
+
+  .header-whatsapp .wa-long {
+    display: none
+  }
+
+  .ultra-footer.discreet-footer {
+    margin-top: 26px;
+    padding: 17px 0 20px;
+    font-size: 10px
+  }
+
+  .client-nav-actions {
+    gap: 7px
+  }
+
+  header .nav-actions {
+    gap: 7px
+  }
+}
+
+@media(max-width:460px) {
+  header .nav-actions {
+    width: 100%;
+    justify-content: space-between
+  }
+
+  .discreet-footer .footer-legal {
+    width: 100%
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  header .header-whatsapp {
+    transition: none
+  }
+}
+
+/* Original Canva wordmark from Canva official brand assets. */
+.cards .canva .brand-stage img {
+  width: min(190px, 80%);
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  filter: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: none
+}
+
+.cards .canva .brand-stage>span {
+  display: none
+}
+
+/* Refined compact footer and matching icon action */
+header .nav-actions {
+  justify-content: flex-end;
+  gap: 9px
+}
+
+header .header-whatsapp {
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  flex: 0 0 42px;
+  padding: 0;
+  gap: 0;
+  background: #27282c;
+  border: 1px solid #48494e;
+  color: #f0f0f0;
+  border-radius: 999px;
+  box-shadow: none
+}
+
+header .header-whatsapp:hover {
+  background: #39393f;
+  border-color: #606167;
+  color: #fff
+}
+
+header .header-whatsapp:focus-visible {
+  outline: 2px solid #d5d7d5;
+  outline-offset: 4px
+}
+
+header .header-whatsapp svg {
+  width: 20px;
+  height: 20px
+}
+
+.ultra-footer.quiet-footer {
+  margin: 38px auto 0;
+  padding: 22px 0 20px;
+  border-top: 1px solid #ffffff12;
+  background: none;
+  box-shadow: none
+}
+
+.quiet-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px
+}
+
+.quiet-footer-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0
+}
+
+.quiet-footer-logo {
+  display: block;
+  line-height: 0;
+  opacity: .85;
+  transition: opacity .2s
+}
+
+.quiet-footer-logo:hover {
+  opacity: 1
+}
+
+.quiet-footer-logo img {
+  display: block;
+  width: 126px;
+  height: 44px;
+  object-fit: contain
+}
+
+.quiet-footer-copyright {
+  border-left: 1px solid #ffffff16;
+  padding-left: 20px;
+  font-size: 11px;
+  color: #959d98;
+  white-space: nowrap
+}
+
+.quiet-footer .footer-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 13px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #a6afa8;
+  text-decoration: none;
+  white-space: nowrap
+}
+
+.footer-top span {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border: 1px solid #ffffff16;
+  border-radius: 50%;
+  color: #c6cec8;
+  transition: background .2s, border-color .2s
+}
+
+.footer-top:hover span {
+  background: #ffffff08;
+  border-color: #ffffff40
+}
+
+.ultra-footer .quiet-footer-note {
+  margin: 9px 0 0;
+  padding-left: 8px;
+  color: #7d8780;
+  font-size: 10px;
+  line-height: 1.6
+}
+
+.quiet-footer a:focus-visible {
+  outline: 2px solid #c7ff2f;
+  outline-offset: 4px
+}
+
+@media(max-width:700px) {
+  header .header-whatsapp {
+    width: 38px;
+    height: 38px;
+    min-height: 38px;
+    flex-basis: 38px;
+    padding: 0
+  }
+
+  .ultra-footer.quiet-footer {
+    margin-top: 28px;
+    padding: 17px 0 18px
+  }
+
+  .quiet-footer-identity {
+    gap: 12px
+  }
+
+  .quiet-footer-logo img {
+    width: 106px;
+    height: 37px
+  }
+
+  .quiet-footer-copyright {
+    font-size: 10px;
+    padding-left: 12px
+  }
+
+  .quiet-footer .footer-top {
+    gap: 7px;
+    font-size: 10px
+  }
+
+  .quiet-footer-row {
+    gap: 10px
+  }
+}
+
+@media(max-width:460px) {
+  header .nav-actions {
+    justify-content: flex-end;
+    gap: 8px
+  }
+
+  .quiet-footer-identity {
+    gap: 2px;
+    align-items: flex-start;
+    flex-direction: column
+  }
+
+  .quiet-footer-copyright {
+    border: 0;
+    padding-left: 7px
+  }
+
+  .ultra-footer .quiet-footer-note {
+    font-size: 9px;
+    margin-top: 12px
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+
+  .quiet-footer-logo,
+  .footer-top span {
+    transition: none
+  }
+}
+
+/* Authorized international purchase contact */
+.quiet-footer-identity {
+  flex-wrap: wrap;
+  gap: 14px 20px
+}
+
+.quiet-footer .footer-authorized {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-left: 20px;
+  border-left: 1px solid #ffffff16;
+  color: #959d98;
+  font-size: 10px;
+  line-height: 1.5;
+  text-decoration: none
+}
+
+.footer-authorized strong {
+  color: #c8d0ca;
+  font-weight: 500;
+  white-space: nowrap
+}
+
+.quiet-footer .footer-authorized:hover strong {
+  color: #d6fca8
+}
+
+.quiet-footer .footer-authorized:focus-visible {
+  outline: 2px solid #c7ff2f;
+  outline-offset: 4px
+}
+
+@media(max-width:700px) {
+  .quiet-footer .footer-authorized {
+    padding-left: 12px
+  }
+
+  .quiet-footer-identity {
+    gap: 10px 12px
+  }
+}
+
+@media(max-width:460px) {
+  .quiet-footer .footer-authorized {
+    border: 0;
+    padding-left: 7px;
+    font-size: 10px
+  }
+
+  .quiet-footer-identity {
+    gap: 5px;
+    align-items: flex-start
+  }
+
+  .quiet-footer-row {
+    align-items: flex-start
+  }
+
+  .quiet-footer .footer-top {
+    margin-top: 7px
+  }
+}
