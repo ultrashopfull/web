@@ -1,6 +1,5 @@
 // Catálogo base editable. Los cambios guardados en este navegador tienen prioridad.
-const BUILTIN_CATALOG = [
- {
+const BUILTIN_CATALOG = [{
   "id": "chatgpt",
   "name": "ChatGPT Pro",
   "brand": "ChatGPT",
