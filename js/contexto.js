@@ -19,7 +19,6 @@
   window.PORTAL_LICENSES = context.licenses;
   window.PORTAL_CATALOG = context.catalog;
   window.PORTAL_SESSION = context.session || null;
-  // Apply after linked styles have been parsed, preserving the original cascade.
   document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
     style.textContent = context.styles;
@@ -41,7 +40,6 @@
       event.preventDefault();
       parent.portalNavigate(href);
     } else if (href.startsWith('#')) {
-      // The base element points to the application root; keep hash links in the view.
       event.preventDefault();
       document.getElementById(href.slice(1))?.scrollIntoView({
         behavior: window.ULTRA_LITE ? 'auto' : 'smooth'
