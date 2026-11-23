@@ -2,10 +2,8 @@
 <html lang="es">
 <head>
 <base href="../">
-<script src="js/contexto.js">
-</script>
-<script src="js/rendimiento.js">
-</script>
+<script src="js/contexto.js"></script>
+<script src="js/rendimiento.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
@@ -15,8 +13,7 @@
 <link rel="stylesheet" href="css/experience.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/cliente.css">
-<script src="js/theme.js">
-</script>
+<script src="js/theme.js"></script>
 <link rel="stylesheet" href="css/rendimiento.css">
 </head>
 <body class="license-page">
@@ -52,8 +49,7 @@
   <div class="pass-topline">
 <span>LICENCIA ORIGINAL</span>
 <span id="license-status" class="pass-status">
-<i aria-hidden="true">
-</i> Activa</span>
+<i aria-hidden="true"></i> Activa</span>
 </div>
   <div class="license-content">
 <section class="mv-tutorial" aria-label="Tutorial de instalación de la licencia">
@@ -61,17 +57,14 @@
 <div class="tutorial-video-shell">
  <video id="license-video" controls playsinline preload="none" tabindex="0" aria-label="Tutorial de instalación de la licencia" hidden>Tu navegador no admite la reproducción de este video.</video>
  <button id="tutorial-cover" class="tutorial-cover" type="button" aria-label="Reproducir tutorial de instalación de la licencia">
-  <span class="cover-grid" aria-hidden="true">
-</span>
+  <span class="cover-grid" aria-hidden="true"></span>
   <span class="cover-heading">
 <span class="cover-license">
 <img id="tutorial-brand" alt="">
-<span id="tutorial-license-name">
-</span>
+<span id="tutorial-license-name"></span>
 </span>
 <span class="cover-category">
-<span class="cover-video-dot" aria-hidden="true">
-</span>VIDEO TUTORIAL</span>
+<span class="cover-video-dot" aria-hidden="true"></span>VIDEO TUTORIAL</span>
 </span>
   <span class="cover-main">
 <span class="cover-copy">
@@ -81,10 +74,8 @@
 </span>
 </span>
 <span class="cover-art" aria-hidden="true">
-<span id="cover-device-watermark" class="cover-device-watermark">
-</span>
-<span class="cover-play-halo">
-</span>
+<span id="cover-device-watermark" class="cover-device-watermark"></span>
+<span class="cover-play-halo"></span>
 <span class="cover-play">
 <svg viewBox="0 0 24 24" fill="currentColor">
 <path d="m9 5 11 7-11 7Z"/>
@@ -94,8 +85,7 @@
 </span>
   <span class="cover-bottom">
 <span class="cover-device-chip">
-<span id="cover-device-icon" aria-hidden="true">
-</span>
+<span id="cover-device-icon" aria-hidden="true"></span>
 <span id="cover-device-name">Tu dispositivo</span>
 </span>
 <span class="cover-watch">
@@ -117,8 +107,7 @@
           <span id="tutorial-duration">0:00</span>
         </div>
         <div class="tutorial-control-row">
-          <button id="tutorial-toggle" type="button" aria-label="Pausar" title="Pausar">
-</button>
+          <button id="tutorial-toggle" type="button" aria-label="Pausar" title="Pausar"></button>
           <button id="tutorial-forward" type="button" aria-label="Adelantar 10 segundos" title="Adelantar 10 segundos">
 <svg viewBox="0 0 24 24" aria-hidden="true">
 <path d="M18 8a8 8 0 1 0 2 7M18 3v5h-5"/>
@@ -126,17 +115,14 @@
 <span>10 s</span>
 </button>
           <button id="tutorial-speed" type="button" aria-label="Velocidad 1×. Cambiar a 2×" title="Cambiar velocidad a 2×">1×</button>
-          <button id="tutorial-fullscreen" type="button" aria-label="Pantalla completa" title="Pantalla completa">
-</button>
+          <button id="tutorial-fullscreen" type="button" aria-label="Pantalla completa" title="Pantalla completa"></button>
         </div>
       </div>
 <span id="tutorial-loading" class="tutorial-loading" role="status" hidden>Cargando video…</span>
 </div>
 </div>
-<p id="tutorial-device-status" class="tutorial-device-status" role="status">
-</p>
-<p id="tutorial-video-error" class="tutorial-video-error" role="status" hidden>
-</p>
+<p id="tutorial-device-status" class="tutorial-device-status" role="status"></p>
+<p id="tutorial-video-error" class="tutorial-video-error" role="status" hidden></p>
 </section>
 <div class="license-client-data" role="group" aria-label="Datos del cliente y de la suscripción">
 
@@ -153,8 +139,7 @@
 <img id="service-logo" alt="" width="64" height="64">
 <div>
 <span class="pass-label">Licencia comprada</span>
-<h2 id="purchased-license">
-</h2>
+<h2 id="purchased-license"></h2>
 </div>
 </div>
     <dl class="pass-account">
@@ -241,8 +226,12 @@
 </svg>
 </a>
 </div>
-  <p id="download-notice" class="mv-download-notice" role="status" aria-live="polite" hidden>
-</p>
+  <!-- ═══ Badge de versión de la extensión (nuevo) ═══ -->
+  <div class="version-badge" id="version-badge" role="status" aria-live="polite" hidden>
+    <span class="version-dot" aria-hidden="true"></span>
+    <span id="version-text"></span>
+  </div>
+  <p id="download-notice" class="mv-download-notice" role="status" aria-live="polite" hidden></p>
  </div>
 </div>
 </section>
@@ -261,12 +250,9 @@
 <path d="m10 2 6 2.5v5c0 3.6-3.5 6.7-6 8-2.5-1.3-6-4.4-6-8v-5L10 2Z" stroke="currentColor" stroke-width="1.4"/>
 <path d="m7 9.5 2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>Licencias</span> originales con garantía y soporte por el tiempo solicitado</p>
-<a class="footer-top" href="#inicio">Volver arriba <span aria-hidden="true">↑</span>
-</a>
+<a class="footer-top" href="#inicio">Volver arriba <span aria-hidden="true">↑</span></a>
 </div>
 </footer>
-<script src="js/cliente.js">
-</script>
+<script src="js/cliente.js"></script>
 </body>
 </html>
-
