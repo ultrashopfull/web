@@ -496,16 +496,190 @@ if (detectedTutorialDevice) {
   deviceStatus.textContent = 'Aún no tenemos un tutorial compatible con este sistema.';
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   CONTROL DE VERSIÓN DE LA EXTENSIÓN
+   - Consulta el bucket público "extensions" (Supabase Storage)
+   - Compara la fecha con la última que descargó el cliente
+   - Muestra badge "Nueva versión" / "Al día" / "Última versión"
+   ═══════════════════════════════════════════════════════════════════ */
+const ExtensionVersion = (() => {
+  const badge = document.getElementById("version-badge");
+  const versionText = document.getElementById("version-text");
+  const downloadBtn = document.getElementById("download");
+  if (!badge || !versionText || !downloadBtn) return { run() {}, info: null };
+
+  const STORAGE_KEY = `ultrashop-ext-version:${service.id}`;
+  const SUPA_URL = (window.ULTRASHOP_CONFIG?.supabaseUrl || "").replace(/\/+$/, "");
+  const SUPA_ANON = window.ULTRASHOP_CONFIG?.supabaseAnonKey || "";
+  const BUCKET = "extensions";
+
+  /* ── Formato de fechas ─────────────────────────────────────── */
+  const fmtDate = (iso) => {
+    try {
+      return new Intl.DateTimeFormat("es-BO", {
+        day: "numeric", month: "short", year: "numeric"
+      }).format(new Date(iso));
+    } catch { return "—"; }
+  };
+  const daysSince = (iso) => {
+    const ms = Date.now() - new Date(iso).getTime();
+    const d = Math.floor(ms / 86400000);
+    if (d <= 0) return "hoy";
+    if (d === 1) return "ayer";
+    return `hace ${d} días`;
+  };
+  const publicUrl = (name) => `${SUPA_URL}/storage/v1/object/public/${BUCKET}/${name}`;
+
+  /* ── Persistencia ──────────────────────────────────────────── */
+  function readStored() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      return obj && obj.date ? obj : null;
+    } catch { return null; }
+  }
+  function writeStored(info) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        date: info.lastModified,
+        kind: info.kind,
+        size: info.size || 0,
+        url: info.url
+      }));
+    } catch {}
+  }
+
+  /* ── Consulta al bucket (REST API, no requiere SDK) ───────── */
+  async function fetchExtensionInfo() {
+    if (!SUPA_URL || !SUPA_ANON) return { ok: false, reason: "no-config" };
+
+    try {
+      const res = await fetch(`${SUPA_URL}/storage/v1/object/list/${BUCKET}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${SUPA_ANON}`,
+          "apikey": SUPA_ANON
+        },
+        body: JSON.stringify({ prefix: "", limit: 200, sortBy: { column: "updated_at", order: "desc" } })
+      });
+
+      if (!res.ok) {
+        console.warn("[version] HTTP", res.status, res.statusText);
+        return { ok: false, reason: "error" };
+      }
+
+      const list = await res.json();
+      if (!Array.isArray(list)) return { ok: false, reason: "error" };
+
+      // Prioridad: ZIP (PC) → CRX (móvil)
+      const zip = list.find(f => f.name === `${service.id}.zip`);
+      const crx = list.find(f => f.name === `${service.id}.crx`);
+      const chosen = zip || crx;
+
+      if (!chosen) return { ok: false, reason: "not-found" };
+
+      return {
+        ok: true,
+        kind: chosen.name.endsWith(".zip") ? "zip" : "crx",
+        url: publicUrl(chosen.name),
+        lastModified: chosen.updated_at || chosen.created_at,
+        size: chosen.metadata?.size || chosen.metadata?.contentLength || 0
+      };
+    } catch (err) {
+      console.warn("[version] fetch error:", err);
+      return { ok: false, reason: "error", message: err?.message };
+    }
+  }
+
+  /* ── Render del badge ──────────────────────────────────────── */
+  let currentInfo = null;
+  function paint(state, info) {
+    if (state === "error") {
+      badge.className = "version-badge is-error";
+      versionText.textContent = "No se pudo comprobar la versión";
+      badge.hidden = false;
+      return;
+    }
+    if (state === "not-found") {
+      badge.hidden = true;
+      return;
+    }
+
+    const stored = readStored();
+    const serverTime = new Date(info.lastModified).getTime();
+    const storedTime = stored ? new Date(stored.date).getTime() : 0;
+    const isNew = stored && serverTime > storedTime + 60000;
+    const neverDownloaded = !stored;
+
+    if (isNew) {
+      badge.className = "version-badge is-new";
+      versionText.innerHTML = `<strong>Nueva versión disponible</strong> · ${fmtDate(info.lastModified)}`;
+    } else if (neverDownloaded) {
+      badge.className = "version-badge is-info";
+      versionText.textContent = `Última versión: ${fmtDate(info.lastModified)}`;
+    } else {
+      badge.className = "version-badge is-ok";
+      versionText.textContent = `Al día · descargada ${daysSince(stored.date)}`;
+    }
+    badge.hidden = false;
+
+    // Guardar la URL real para el botón Descargar
+    downloadBtn.dataset.extensionUrl = info.url;
+    downloadBtn.dataset.extensionKind = info.kind;
+    downloadBtn.dataset.extensionDate = info.lastModified;
+    downloadBtn.dataset.extensionSize = String(info.size || 0);
+
+    currentInfo = info;
+  }
+
+  /* ── Ejecución principal ───────────────────────────────────── */
+  async function run() {
+    if (expired) { badge.hidden = true; return; }
+    const info = await fetchExtensionInfo();
+    if (!info.ok) {
+      paint(info.reason === "error" ? "error" : "not-found", null);
+      return;
+    }
+    paint("ok", info);
+  }
+
+  /* ── Hook: guardar la fecha cuando el cliente pulsa Descargar ─ */
+  downloadBtn.addEventListener("click", () => {
+    const url = downloadBtn.dataset.extensionUrl;
+    const date = downloadBtn.dataset.extensionDate;
+    const kind = downloadBtn.dataset.extensionKind;
+    const size = parseInt(downloadBtn.dataset.extensionSize || "0", 10);
+    if (url && date) {
+      writeStored({ url, kind, size, lastModified: date });
+      setTimeout(run, 500);
+    }
+  }, true);
+
+  return { run, get info() { return currentInfo; } };
+})();
+
+/* ── Listener original del botón Descargar (con prioridad al bucket) ─ */
 $('#download').addEventListener('click', () => {
   if (expired) return;
-  if (service.downloadUrl) {
-    window.open(service.downloadUrl, '_blank', 'noopener,noreferrer');
+  const bucketUrl = $('#download').dataset.extensionUrl;
+  const targetUrl = bucketUrl || service.downloadUrl;
+  if (targetUrl) {
+    window.open(targetUrl, '_blank', 'noopener,noreferrer');
   } else {
     const message = $('#download-notice');
     message.hidden = false;
     message.textContent = `La extensión de ${service.name} aún no está cargada.`;
   }
 });
+
+/* ── Lanzar el chequeo de versión al cargar ───────────────── */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => ExtensionVersion.run());
+} else {
+  ExtensionVersion.run();
+}
 
 // Start on visibility so the animation is not missed below the tutorial on mobile.
 (function animateBalance() {
