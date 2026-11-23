@@ -498,22 +498,36 @@ if (detectedTutorialDevice) {
 
 /* ═══════════════════════════════════════════════════════════════════
    CONTROL DE VERSIÓN DE LA EXTENSIÓN
-   - Consulta el bucket público "extensions" (Supabase Storage)
-   - Compara la fecha con la última que descargó el cliente
+   - Usa PORTAL_CONFIG (el que existe en el iframe, no ULTRASHOP_CONFIG)
+   - Busca el archivo por nombre exacto, por nombre del catálogo, por prefijo
    - Muestra badge "Nueva versión" / "Al día" / "Última versión"
    ═══════════════════════════════════════════════════════════════════ */
 const ExtensionVersion = (() => {
   const badge = document.getElementById("version-badge");
   const versionText = document.getElementById("version-text");
   const downloadBtn = document.getElementById("download");
-  if (!badge || !versionText || !downloadBtn) return { run() {}, info: null };
+  if (!badge || !versionText || !downloadBtn) {
+    console.warn("[version] Elementos del badge no encontrados");
+    return { run() {}, info: null };
+  }
 
   const STORAGE_KEY = `ultrashop-ext-version:${service.id}`;
-  const SUPA_URL = (window.ULTRASHOP_CONFIG?.supabaseUrl || "").replace(/\/+$/, "");
-  const SUPA_ANON = window.ULTRASHOP_CONFIG?.supabaseAnonKey || "";
   const BUCKET = "extensions";
 
-  /* ── Formato de fechas ─────────────────────────────────────── */
+  /* FIX: usar PORTAL_CONFIG, que SÍ existe en el iframe */
+  const cfg = window.PORTAL_CONFIG || {};
+  const SUPA_URL  = (cfg.supabaseUrl  || "").replace(/\/+$/, "");
+  const SUPA_ANON = (cfg.supabaseAnonKey || "");
+
+  console.log("[version] init →", {
+    service: service.id,
+    supabaseUrl: SUPA_URL ? "✓" : "✗",
+    anonKey: SUPA_ANON ? "✓" : "✗",
+    expired,
+    catalogDownloadUrl: service.downloadUrl || "(vacío)"
+  });
+
+  /* ── Fechas ──────────────────────────────────────────────── */
   const fmtDate = (iso) => {
     try {
       return new Intl.DateTimeFormat("es-BO", {
@@ -530,7 +544,7 @@ const ExtensionVersion = (() => {
   };
   const publicUrl = (name) => `${SUPA_URL}/storage/v1/object/public/${BUCKET}/${name}`;
 
-  /* ── Persistencia ──────────────────────────────────────────── */
+  /* ── Persistencia ────────────────────────────────────────── */
   function readStored() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -550,9 +564,53 @@ const ExtensionVersion = (() => {
     } catch {}
   }
 
-  /* ── Consulta al bucket (REST API, no requiere SDK) ───────── */
+  /* ── Detección de archivo (3 estrategias en orden) ───────── */
+  function pickFile(list, serviceId, catalogDownloadUrl) {
+    /* 1) Nombre exacto: chatgpt.zip / chatgpt.crx */
+    const exactZip = list.find(f => f.name === `${serviceId}.zip`);
+    const exactCrx = list.find(f => f.name === `${serviceId}.crx`);
+    if (exactZip) return { file: exactZip, kind: "zip", mode: "exact" };
+    if (exactCrx) return { file: exactCrx, kind: "crx", mode: "exact" };
+
+    /* 2) Nombre del archivo en el downloadUrl del catálogo
+          (ej: catalogo.js dice ".../GPT_Pro_Licencia.zip" → busca ese nombre) */
+    if (catalogDownloadUrl) {
+      try {
+        const filename = decodeURIComponent(
+          catalogDownloadUrl.split("/").pop().split("?")[0]
+        );
+        if (filename) {
+          const match = list.find(f => f.name === filename);
+          if (match) {
+            const kind = match.name.toLowerCase().endsWith(".crx") ? "crx" : "zip";
+            return { file: match, kind, mode: "catalog" };
+          }
+        }
+      } catch {}
+    }
+
+    /* 3) Prefijo: chatgpt-*.zip / chatgpt-*.crx */
+    const lower = serviceId.toLowerCase();
+    const startZip = list.find(f =>
+      f.name.toLowerCase().startsWith(lower + "-") &&
+      f.name.toLowerCase().endsWith(".zip")
+    );
+    const startCrx = list.find(f =>
+      f.name.toLowerCase().startsWith(lower + "-") &&
+      f.name.toLowerCase().endsWith(".crx")
+    );
+    if (startZip) return { file: startZip, kind: "zip", mode: "prefix" };
+    if (startCrx) return { file: startCrx, kind: "crx", mode: "prefix" };
+
+    return null;
+  }
+
+  /* ── Consulta al bucket ──────────────────────────────────── */
   async function fetchExtensionInfo() {
-    if (!SUPA_URL || !SUPA_ANON) return { ok: false, reason: "no-config" };
+    if (!SUPA_URL || !SUPA_ANON) {
+      console.warn("[version] sin config → abortado");
+      return { ok: false, reason: "no-config" };
+    }
 
     try {
       const res = await fetch(`${SUPA_URL}/storage/v1/object/list/${BUCKET}`, {
@@ -565,27 +623,35 @@ const ExtensionVersion = (() => {
         body: JSON.stringify({ prefix: "", limit: 200, sortBy: { column: "updated_at", order: "desc" } })
       });
 
+      console.log("[version] list →", res.status);
+
       if (!res.ok) {
-        console.warn("[version] HTTP", res.status, res.statusText);
+        console.warn("[version] HTTP error", res.status);
         return { ok: false, reason: "error" };
       }
 
       const list = await res.json();
-      if (!Array.isArray(list)) return { ok: false, reason: "error" };
+      if (!Array.isArray(list)) {
+        console.warn("[version] respuesta no es array:", list);
+        return { ok: false, reason: "error" };
+      }
 
-      // Prioridad: ZIP (PC) → CRX (móvil)
-      const zip = list.find(f => f.name === `${service.id}.zip`);
-      const crx = list.find(f => f.name === `${service.id}.crx`);
-      const chosen = zip || crx;
-
-      if (!chosen) return { ok: false, reason: "not-found" };
+      console.log("[version] archivos en bucket:", list.map(f => f.name));
+      const picked = pickFile(list, service.id, service.downloadUrl);
+      if (!picked) {
+        console.log("[version] no hay archivo para", service.id);
+        return { ok: false, reason: "not-found" };
+      }
+      console.log("[version] archivo elegido:", picked.file.name, "· modo:", picked.mode);
 
       return {
         ok: true,
-        kind: chosen.name.endsWith(".zip") ? "zip" : "crx",
-        url: publicUrl(chosen.name),
-        lastModified: chosen.updated_at || chosen.created_at,
-        size: chosen.metadata?.size || chosen.metadata?.contentLength || 0
+        kind: picked.kind,
+        mode: picked.mode,
+        fileName: picked.file.name,
+        url: publicUrl(picked.file.name),
+        lastModified: picked.file.updated_at || picked.file.created_at,
+        size: picked.file.metadata?.size || picked.file.metadata?.contentLength || 0
       };
     } catch (err) {
       console.warn("[version] fetch error:", err);
@@ -593,7 +659,7 @@ const ExtensionVersion = (() => {
     }
   }
 
-  /* ── Render del badge ──────────────────────────────────────── */
+  /* ── Render del badge ────────────────────────────────────── */
   let currentInfo = null;
   function paint(state, info) {
     if (state === "error") {
@@ -625,27 +691,28 @@ const ExtensionVersion = (() => {
     }
     badge.hidden = false;
 
-    // Guardar la URL real para el botón Descargar
-    downloadBtn.dataset.extensionUrl = info.url;
+    downloadBtn.dataset.extensionUrl  = info.url;
     downloadBtn.dataset.extensionKind = info.kind;
     downloadBtn.dataset.extensionDate = info.lastModified;
     downloadBtn.dataset.extensionSize = String(info.size || 0);
+    downloadBtn.dataset.extensionFile = info.fileName || "";
 
     currentInfo = info;
+    console.log("[version] pintado:", state, "→", versionText.textContent, "| URL:", info.url);
   }
 
-  /* ── Ejecución principal ───────────────────────────────────── */
+  /* ── Ejecución principal ─────────────────────────────────── */
   async function run() {
     if (expired) { badge.hidden = true; return; }
     const info = await fetchExtensionInfo();
     if (!info.ok) {
-      paint(info.reason === "error" ? "error" : "not-found", null);
+      paint(info.reason === "error" || info.reason === "no-config" ? "error" : "not-found", null);
       return;
     }
     paint("ok", info);
   }
 
-  /* ── Hook: guardar la fecha cuando el cliente pulsa Descargar ─ */
+  /* ── Hook: guardar la fecha al pulsar Descargar ──────────── */
   downloadBtn.addEventListener("click", () => {
     const url = downloadBtn.dataset.extensionUrl;
     const date = downloadBtn.dataset.extensionDate;
