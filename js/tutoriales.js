@@ -1,6 +1,7 @@
 /* Almacenamiento local de demostración. Adaptar estas funciones a la API del servidor.
  * Los listados consultan metadatos; los Blobs se leen solamente al reproducir/exportar.
  * Conserva el nombre de la base anterior y migra sin borrar videos existentes.
+ * Soporta 2 tipos: 'file' (video subido) y 'youtube' (URL externa).
  */
 (function() {
   const devicePaths = [
@@ -15,17 +16,28 @@
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + path + '"/></svg>'
   }));
   const key = (service, device) => service + ':' + device;
-  const metadata = record => ({
-    key: record.key,
-    service: record.service,
-    device: record.device,
-    name: record.name,
-    size: record.size || record.blob?.size || 0,
-    duration: record.duration,
-    updatedAt: record.updatedAt,
-    deleted: Boolean(record.deleted),
-    local: true
-  });
+
+  /* Metadata expuesta a admin.js y cliente.js. Nunca incluye el Blob. */
+  const metadata = record => {
+    const isYoutube = record.type === 'youtube' || record.provider === 'youtube';
+    return {
+      key: record.key,
+      service: record.service,
+      device: record.device,
+      name: record.name,
+      size: record.size || record.blob?.size || 0,
+      duration: record.duration,
+      updatedAt: record.updatedAt,
+      deleted: Boolean(record.deleted),
+      // 'local' = true solo si hay un blob almacenado (no YouTube)
+      local: !isYoutube,
+      type: isYoutube ? 'youtube' : 'file',
+      provider: isYoutube ? 'youtube' : null,
+      videoId: isYoutube ? (record.videoId || null) : null,
+      url: isYoutube ? (record.url || null) : null,
+    };
+  };
+
   let dbPromise;
 
   function database() {
@@ -106,6 +118,7 @@
     }));
   } catch {
     /* La sincronización dentro de esta ventana sigue disponible. */ }
+
   async function saveRecord(record) {
     const db = await database();
     await new Promise((resolve, reject) => {
@@ -125,6 +138,8 @@
     }));
     channel?.postMessage(detail);
   }
+
+  /* Devuelve el record completo (con blob si es file, con url si es youtube) */
   async function get(service, device) {
     valid(service, device);
     let record;
@@ -133,8 +148,13 @@
     } catch (error) {
       if (!TUTORIAL_DEFAULTS[key(service, device)]) throw error;
     }
-    return record ? (record.deleted ? null : record) : TUTORIAL_DEFAULTS[key(service, device)] || null;
+    if (record) return record.deleted ? null : record;
+    // Fallback al default (de TUTORIAL_DEFAULTS) que puede ser file o youtube
+    const def = TUTORIAL_DEFAULTS[key(service, device)];
+    return def || null;
   }
+
+  /* Devuelve solo metadata (sin blob) */
   async function info(service, device) {
     valid(service, device);
     let record;
@@ -143,8 +163,44 @@
     } catch (error) {
       if (!TUTORIAL_DEFAULTS[key(service, device)]) throw error;
     }
-    return record ? (record.deleted ? null : record) : TUTORIAL_DEFAULTS[key(service, device)] || null;
+    if (record) return record.deleted ? null : record;
+    const def = TUTORIAL_DEFAULTS[key(service, device)];
+    if (!def) return null;
+    // Normalizar el default para que tenga el mismo formato que metadata()
+    if (def.provider === 'youtube') {
+      return {
+        key: key(service, device),
+        service,
+        device,
+        name: def.name || 'Video de YouTube',
+        size: 0,
+        duration: 0,
+        updatedAt: null,
+        deleted: false,
+        local: false,
+        type: 'youtube',
+        provider: 'youtube',
+        videoId: def.videoId || null,
+        url: def.url || null,
+      };
+    }
+    return {
+      key: key(service, device),
+      service,
+      device,
+      name: def.name || 'Tutorial incluido',
+      size: def.size || 0,
+      duration: def.duration || 0,
+      updatedAt: null,
+      deleted: false,
+      local: true,
+      type: 'file',
+      provider: null,
+      videoId: null,
+      url: null,
+    };
   }
+
   window.portalTutorialStore = {
     devices,
     readRecord,
