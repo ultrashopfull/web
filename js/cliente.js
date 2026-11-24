@@ -17,7 +17,6 @@ function whatsappUrl(number, message) {
 const service = services.find(s => s.id === window.PORTAL_SERVICE && s.visible) || services.find(s => s.visible);
 const session = window.PORTAL_SESSION;
 if (!session) {
-  // Salvaguarda: contexto.js ya debió redirigirnos.
   throw new Error('Sesión de licencia no disponible');
 }
 
@@ -54,7 +53,6 @@ $('#license-name').textContent = service.name;
 $('#purchased-license').textContent = service.name;
 $('#service-logo').src = window.PORTAL_BRANDS[service.id];
 $('#member-user').textContent = membership.user;
-// The final date is the expiration boundary: start date + contracted days.
 const [startYear, startMonth, startDay] = membership.startDate.split('-').map(Number);
 const startDate = new Date(Date.UTC(startYear, startMonth - 1, startDay));
 const endDate = new Date(startDate);
@@ -74,7 +72,6 @@ for (const [selector, date] of [
   element.textContent = dateFormatter.format(date);
 }
 $('#remaining-days').textContent = membership.remainingDays;
-// El total contratado se distingue del contador de días restantes.
 const planBadge = document.createElement('span');
 planBadge.className = 'subscription-plan-badge';
 const planDays = document.createElement('strong');
@@ -124,11 +121,9 @@ Quisiera renovar mi suscripción a *${service.name}*.
 ¿Me podrías compartir tu método de pago para realizar la renovación, por favor?`;
 renew.href = whatsappUrl(config.salesWhatsapp, renewalMessage);
 renew.setAttribute('aria-label', 'Renovar ' + service.name + ' por WhatsApp');
-// Una suscripción vencida conserva la renovación, pero no permite usar el acceso.
 const downloadButton = $('#download');
 const officialLink = $('#official');
 if (expired) {
-  // El grupo de acceso queda fuera de la interacción con ratón, tacto y teclado.
   $('.pass-actions').inert = true;
   $('.pass-actions').title = 'Renueva tu licencia para habilitar estas opciones';
   downloadButton.disabled = true;
@@ -161,13 +156,11 @@ if (expired) {
   renew.querySelector('span').textContent = 'Renovar ahora';
 }
 
-// NOTA: bloque de credenciales de la cuenta maestra ELIMINADO por seguridad.
-// Las credenciales se entregan manualmente al cliente por WhatsApp.
-
-// Los tutoriales se resuelven por licencia y dispositivo mediante portalTutorials.
+/* ═══════════ Tutorial (video subido o YouTube) ═══════════ */
 const video = $('#license-video');
 video.title = 'Tutorial de instalación de ' + service.name;
 let tutorialVideoUrl = '';
+let tutorialYoutubeId = null;
 const tutorialCover = $('#tutorial-cover');
 const tutorialLoading = $('#tutorial-loading');
 const tutorialError = $('#tutorial-video-error');
@@ -177,7 +170,54 @@ const playButton = $('#tutorial-toggle');
 const seek = $('#tutorial-seek');
 const speedButton = $('#tutorial-speed');
 const fullscreenButton = $('#tutorial-fullscreen');
-// Vista ampliada dentro de la web, conservando el mismo reproductor y su posición.
+
+/* Contenedor dinámico para YouTube (se crea la primera vez que hace falta) */
+function ensureYoutubeContainer() {
+  let wrap = document.getElementById('tutorial-youtube-wrap');
+  if (wrap) return wrap;
+  wrap = document.createElement('div');
+  wrap.id = 'tutorial-youtube-wrap';
+  wrap.className = 'tutorial-youtube-wrap';
+  wrap.hidden = true;
+  wrap.innerHTML = `
+    <iframe id="tutorial-youtube-frame"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+      frameborder="0"
+      title="Tutorial de YouTube"></iframe>
+    <button type="button" class="tutorial-youtube-close" aria-label="Cerrar video" title="Cerrar video">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+  `;
+  player.insertBefore(wrap, video);
+  wrap.querySelector('.tutorial-youtube-close').addEventListener('click', closeYoutubePlayer);
+  return wrap;
+}
+
+function openYoutubePlayer(videoId) {
+  if (!videoId) return;
+  const wrap = ensureYoutubeContainer();
+  const iframe = wrap.querySelector('iframe');
+  iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  wrap.hidden = false;
+  tutorialCover.hidden = true;
+  video.hidden = true;
+  controls.hidden = true;
+  tutorialLoading.hidden = true;
+  tutorialError.hidden = true;
+}
+
+function closeYoutubePlayer() {
+  const wrap = document.getElementById('tutorial-youtube-wrap');
+  if (!wrap) return;
+  const iframe = wrap.querySelector('iframe');
+  if (iframe) iframe.src = '';
+  wrap.hidden = true;
+  tutorialCover.hidden = false;
+  $('#tutorial-play-label').textContent = 'Volver a ver';
+}
+
 const expandedPlayer = document.createElement('dialog');
 expandedPlayer.className = 'tutorial-expanded-overlay';
 expandedPlayer.setAttribute('aria-label', 'Tutorial de instalación ampliado');
@@ -211,9 +251,7 @@ function closeExpandedVideo() {
   }
   document.body.style.overflow = previousPageOverflow;
   syncFullscreen();
-  if (!controls.hidden) fullscreenButton.focus({
-    preventScroll: true
-  });
+  if (!controls.hidden) fullscreenButton.focus({ preventScroll: true });
 }
 
 function openExpandedVideo() {
@@ -227,9 +265,7 @@ function openExpandedVideo() {
   expandedPlayer.showModal();
   movePlayerPreservingPlayback(expandedPlayer);
   syncFullscreen();
-  fullscreenButton.focus({
-    preventScroll: true
-  });
+  fullscreenButton.focus({ preventScroll: true });
 }
 closeExpandedButton.addEventListener('click', closeExpandedVideo);
 expandedPlayer.addEventListener('cancel', event => {
@@ -242,7 +278,6 @@ const playIcon = svg('<path d="m9 5 11 7-11 7Z"/>');
 const pauseIcon = svg('<path d="M8 5v14M16 5v14"/>');
 const expandIcon = svg('<path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5"/>');
 const reduceIcon = svg('<path d="M4 9h5V4m11 5h-5V4M9 20v-5H4m11 5v-5h5"/>');
-// El atributo controls del HTML queda como alternativa si no se ejecuta JavaScript.
 video.controls = false;
 $('#tutorial-brand').src = window.PORTAL_BRANDS[service.id];
 $('#tutorial-license-name').textContent = service.name;
@@ -297,9 +332,18 @@ function playTutorial() {
     if (error.name !== 'AbortError') showTutorialError();
   });
 }
+
 tutorialCover.addEventListener('click', async () => {
   if (!tutorialVideoUrl) return;
   const version = tutorialSelectionVersion;
+
+  /* YouTube: abrir iframe embed */
+  if (tutorialVideoUrl === 'youtube-tutorial') {
+    openYoutubePlayer(tutorialYoutubeId);
+    return;
+  }
+
+  /* Archivo local (blob) */
   if (tutorialVideoUrl === 'local-tutorial') {
     tutorialCover.disabled = true;
     try {
@@ -314,6 +358,7 @@ tutorialCover.addEventListener('click', async () => {
       if (version === tutorialSelectionVersion) tutorialCover.disabled = false;
     }
   }
+
   tutorialError.hidden = true;
   tutorialCover.hidden = true;
   video.hidden = false;
@@ -324,9 +369,7 @@ tutorialCover.addEventListener('click', async () => {
     video.load();
   }
   if (video.ended) video.currentTime = 0;
-  playButton.focus({
-    preventScroll: true
-  });
+  playButton.focus({ preventScroll: true });
   playTutorial();
 });
 playButton.addEventListener('click', () => video.paused ? playTutorial() : video.pause());
@@ -381,38 +424,20 @@ video.addEventListener('ended', () => {
   $('#tutorial-play-label').textContent = 'Volver a ver';
   tutorialCover.setAttribute('aria-label', 'Volver a reproducir el tutorial de instalación');
   closeExpandedVideo();
-  tutorialCover.focus({
-    preventScroll: true
-  });
+  tutorialCover.focus({ preventScroll: true });
 });
 syncPlay();
 syncTimeline();
 syncFullscreen();
-// Selección automática por sistema operativo; el ancho de pantalla no decide el tutorial.
-// iPadOS en modo escritorio se identifica por la plataforma Mac y sus puntos táctiles.
+
 function detectTutorialDevice(nav = navigator) {
   const ua = String(nav.userAgent || '');
   const platform = String(nav.userAgentData?.platform || nav.platform || '');
-  if (/iPad/i.test(ua) || (/Mac/i.test(platform) && Number(nav.maxTouchPoints) > 1)) return {
-    id: 'iphone',
-    label: 'iPad'
-  };
-  if (/iPhone|iPod/i.test(ua)) return {
-    id: 'iphone',
-    label: 'iPhone'
-  };
-  if (/Android/i.test(ua + ' ' + platform)) return {
-    id: 'android',
-    label: 'Android'
-  };
-  if (/Windows|Win32|Win64|WinNT/i.test(ua + ' ' + platform)) return {
-    id: 'windows',
-    label: 'Windows'
-  };
-  if (/Macintosh|Mac OS X|MacIntel|macOS/i.test(ua + ' ' + platform)) return {
-    id: 'mac',
-    label: 'Mac'
-  };
+  if (/iPad/i.test(ua) || (/Mac/i.test(platform) && Number(nav.maxTouchPoints) > 1)) return { id: 'iphone', label: 'iPad' };
+  if (/iPhone|iPod/i.test(ua)) return { id: 'iphone', label: 'iPhone' };
+  if (/Android/i.test(ua + ' ' + platform)) return { id: 'android', label: 'Android' };
+  if (/Windows|Win32|Win64|WinNT/i.test(ua + ' ' + platform)) return { id: 'windows', label: 'Windows' };
+  if (/Macintosh|Mac OS X|MacIntel|macOS/i.test(ua + ' ' + platform)) return { id: 'mac', label: 'Mac' };
   return null;
 }
 const detectedTutorialDevice = detectTutorialDevice();
@@ -421,6 +446,7 @@ let selectedTutorialDevice = null,
   tutorialBlobUrl = null;
 const tutorialDevices = parent.portalTutorials.devices;
 const deviceStatus = $('#tutorial-device-status');
+
 async function selectTutorialDevice(deviceId) {
   const device = tutorialDevices.find(d => d.id === deviceId);
   if (!device) return;
@@ -428,6 +454,7 @@ async function selectTutorialDevice(deviceId) {
   const version = ++tutorialSelectionVersion;
   video.pause();
   closeExpandedVideo();
+  closeYoutubePlayer();
   video.removeAttribute('src');
   video.load();
   if (tutorialBlobUrl) {
@@ -435,6 +462,7 @@ async function selectTutorialDevice(deviceId) {
     tutorialBlobUrl = null;
   }
   tutorialVideoUrl = '';
+  tutorialYoutubeId = null;
   video.hidden = true;
   controls.hidden = true;
   tutorialCover.hidden = false;
@@ -454,10 +482,20 @@ async function selectTutorialDevice(deviceId) {
     const item = await parent.portalTutorials.info(service.id, deviceId);
     if (version !== tutorialSelectionVersion) return;
     if (item) {
-      tutorialVideoUrl = item.local ? 'local-tutorial' : item.url;
-      tutorialCover.disabled = false;
-      $('#tutorial-play-label').textContent = 'Ver tutorial';
-      tutorialCover.setAttribute('aria-label', 'Reproducir tutorial de ' + service.name + ' para ' + deviceLabel);
+      const isYoutube = item.type === 'youtube' || item.provider === 'youtube';
+      if (isYoutube) {
+        tutorialYoutubeId = item.videoId || null;
+        if (!tutorialYoutubeId) throw new Error('ID de YouTube inválido');
+        tutorialVideoUrl = 'youtube-tutorial';
+        tutorialCover.disabled = false;
+        $('#tutorial-play-label').textContent = 'Ver tutorial';
+        tutorialCover.setAttribute('aria-label', 'Reproducir tutorial de ' + service.name + ' para ' + deviceLabel + ' en YouTube');
+      } else {
+        tutorialVideoUrl = item.local ? 'local-tutorial' : item.url;
+        tutorialCover.disabled = false;
+        $('#tutorial-play-label').textContent = 'Ver tutorial';
+        tutorialCover.setAttribute('aria-label', 'Reproducir tutorial de ' + service.name + ' para ' + deviceLabel);
+      }
     } else {
       $('#tutorial-play-label').textContent = 'Sin video';
       deviceStatus.textContent = 'El tutorial para ' + deviceLabel + ' estará disponible próximamente.';
@@ -496,44 +534,22 @@ if (detectedTutorialDevice) {
   deviceStatus.textContent = 'Aún no tenemos un tutorial compatible con este sistema.';
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   CONTROL DE VERSIÓN DE LA EXTENSIÓN
-   - Usa PORTAL_CONFIG (el que existe en el iframe, no ULTRASHOP_CONFIG)
-   - Busca el archivo por nombre exacto, por nombre del catálogo, por prefijo
-   - Muestra badge "Nueva versión" / "Al día" / "Última versión"
-   ═══════════════════════════════════════════════════════════════════ */
+/* ═══════════ Control de versión de la extensión ═══════════ */
 const ExtensionVersion = (() => {
   const badge = document.getElementById("version-badge");
   const versionText = document.getElementById("version-text");
   const downloadBtn = document.getElementById("download");
-  if (!badge || !versionText || !downloadBtn) {
-    console.warn("[version] Elementos del badge no encontrados");
-    return { run() {}, info: null };
-  }
+  if (!badge || !versionText || !downloadBtn) return { run() {}, info: null };
 
   const STORAGE_KEY = `ultrashop-ext-version:${service.id}`;
   const BUCKET = "extensions";
-
-  /* FIX: usar PORTAL_CONFIG, que SÍ existe en el iframe */
   const cfg = window.PORTAL_CONFIG || {};
   const SUPA_URL  = (cfg.supabaseUrl  || "").replace(/\/+$/, "");
   const SUPA_ANON = (cfg.supabaseAnonKey || "");
 
-  console.log("[version] init →", {
-    service: service.id,
-    supabaseUrl: SUPA_URL ? "✓" : "✗",
-    anonKey: SUPA_ANON ? "✓" : "✗",
-    expired,
-    catalogDownloadUrl: service.downloadUrl || "(vacío)"
-  });
-
-  /* ── Fechas ──────────────────────────────────────────────── */
   const fmtDate = (iso) => {
-    try {
-      return new Intl.DateTimeFormat("es-BO", {
-        day: "numeric", month: "short", year: "numeric"
-      }).format(new Date(iso));
-    } catch { return "—"; }
+    try { return new Intl.DateTimeFormat("es-BO", { day: "numeric", month: "short", year: "numeric" }).format(new Date(iso)); }
+    catch { return "—"; }
   };
   const daysSince = (iso) => {
     const ms = Date.now() - new Date(iso).getTime();
@@ -544,7 +560,6 @@ const ExtensionVersion = (() => {
   };
   const publicUrl = (name) => `${SUPA_URL}/storage/v1/object/public/${BUCKET}/${name}`;
 
-  /* ── Persistencia ────────────────────────────────────────── */
   function readStored() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -556,29 +571,19 @@ const ExtensionVersion = (() => {
   function writeStored(info) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        date: info.lastModified,
-        kind: info.kind,
-        size: info.size || 0,
-        url: info.url
+        date: info.lastModified, kind: info.kind, size: info.size || 0, url: info.url
       }));
     } catch {}
   }
 
-  /* ── Detección de archivo (3 estrategias en orden) ───────── */
   function pickFile(list, serviceId, catalogDownloadUrl) {
-    /* 1) Nombre exacto: chatgpt.zip / chatgpt.crx */
     const exactZip = list.find(f => f.name === `${serviceId}.zip`);
     const exactCrx = list.find(f => f.name === `${serviceId}.crx`);
     if (exactZip) return { file: exactZip, kind: "zip", mode: "exact" };
     if (exactCrx) return { file: exactCrx, kind: "crx", mode: "exact" };
-
-    /* 2) Nombre del archivo en el downloadUrl del catálogo
-          (ej: catalogo.js dice ".../GPT_Pro_Licencia.zip" → busca ese nombre) */
     if (catalogDownloadUrl) {
       try {
-        const filename = decodeURIComponent(
-          catalogDownloadUrl.split("/").pop().split("?")[0]
-        );
+        const filename = decodeURIComponent(catalogDownloadUrl.split("/").pop().split("?")[0]);
         if (filename) {
           const match = list.find(f => f.name === filename);
           if (match) {
@@ -588,30 +593,16 @@ const ExtensionVersion = (() => {
         }
       } catch {}
     }
-
-    /* 3) Prefijo: chatgpt-*.zip / chatgpt-*.crx */
     const lower = serviceId.toLowerCase();
-    const startZip = list.find(f =>
-      f.name.toLowerCase().startsWith(lower + "-") &&
-      f.name.toLowerCase().endsWith(".zip")
-    );
-    const startCrx = list.find(f =>
-      f.name.toLowerCase().startsWith(lower + "-") &&
-      f.name.toLowerCase().endsWith(".crx")
-    );
+    const startZip = list.find(f => f.name.toLowerCase().startsWith(lower + "-") && f.name.toLowerCase().endsWith(".zip"));
+    const startCrx = list.find(f => f.name.toLowerCase().startsWith(lower + "-") && f.name.toLowerCase().endsWith(".crx"));
     if (startZip) return { file: startZip, kind: "zip", mode: "prefix" };
     if (startCrx) return { file: startCrx, kind: "crx", mode: "prefix" };
-
     return null;
   }
 
-  /* ── Consulta al bucket ──────────────────────────────────── */
   async function fetchExtensionInfo() {
-    if (!SUPA_URL || !SUPA_ANON) {
-      console.warn("[version] sin config → abortado");
-      return { ok: false, reason: "no-config" };
-    }
-
+    if (!SUPA_URL || !SUPA_ANON) return { ok: false, reason: "no-config" };
     try {
       const res = await fetch(`${SUPA_URL}/storage/v1/object/list/${BUCKET}`, {
         method: "POST",
@@ -622,44 +613,20 @@ const ExtensionVersion = (() => {
         },
         body: JSON.stringify({ prefix: "", limit: 200, sortBy: { column: "updated_at", order: "desc" } })
       });
-
-      console.log("[version] list →", res.status);
-
-      if (!res.ok) {
-        console.warn("[version] HTTP error", res.status);
-        return { ok: false, reason: "error" };
-      }
-
+      if (!res.ok) return { ok: false, reason: "error" };
       const list = await res.json();
-      if (!Array.isArray(list)) {
-        console.warn("[version] respuesta no es array:", list);
-        return { ok: false, reason: "error" };
-      }
-
-      console.log("[version] archivos en bucket:", list.map(f => f.name));
+      if (!Array.isArray(list)) return { ok: false, reason: "error" };
       const picked = pickFile(list, service.id, service.downloadUrl);
-      if (!picked) {
-        console.log("[version] no hay archivo para", service.id);
-        return { ok: false, reason: "not-found" };
-      }
-      console.log("[version] archivo elegido:", picked.file.name, "· modo:", picked.mode);
-
+      if (!picked) return { ok: false, reason: "not-found" };
       return {
-        ok: true,
-        kind: picked.kind,
-        mode: picked.mode,
-        fileName: picked.file.name,
+        ok: true, kind: picked.kind, mode: picked.mode, fileName: picked.file.name,
         url: publicUrl(picked.file.name),
         lastModified: picked.file.updated_at || picked.file.created_at,
         size: picked.file.metadata?.size || picked.file.metadata?.contentLength || 0
       };
-    } catch (err) {
-      console.warn("[version] fetch error:", err);
-      return { ok: false, reason: "error", message: err?.message };
-    }
+    } catch { return { ok: false, reason: "error" }; }
   }
 
-  /* ── Render del badge ────────────────────────────────────── */
   let currentInfo = null;
   function paint(state, info) {
     if (state === "error") {
@@ -668,17 +635,12 @@ const ExtensionVersion = (() => {
       badge.hidden = false;
       return;
     }
-    if (state === "not-found") {
-      badge.hidden = true;
-      return;
-    }
-
+    if (state === "not-found") { badge.hidden = true; return; }
     const stored = readStored();
     const serverTime = new Date(info.lastModified).getTime();
     const storedTime = stored ? new Date(stored.date).getTime() : 0;
     const isNew = stored && serverTime > storedTime + 60000;
     const neverDownloaded = !stored;
-
     if (isNew) {
       badge.className = "version-badge is-new";
       versionText.innerHTML = `<strong>Nueva versión disponible</strong> · ${fmtDate(info.lastModified)}`;
@@ -690,79 +652,62 @@ const ExtensionVersion = (() => {
       versionText.textContent = `Al día · descargada ${daysSince(stored.date)}`;
     }
     badge.hidden = false;
-
     downloadBtn.dataset.extensionUrl  = info.url;
     downloadBtn.dataset.extensionKind = info.kind;
     downloadBtn.dataset.extensionDate = info.lastModified;
     downloadBtn.dataset.extensionSize = String(info.size || 0);
     downloadBtn.dataset.extensionFile = info.fileName || "";
-
     currentInfo = info;
-    console.log("[version] pintado:", state, "→", versionText.textContent, "| URL:", info.url);
   }
 
-  /* ── Ejecución principal ─────────────────────────────────── */
   async function run() {
     if (expired) { badge.hidden = true; return; }
     const info = await fetchExtensionInfo();
-    if (!info.ok) {
-      paint(info.reason === "error" || info.reason === "no-config" ? "error" : "not-found", null);
-      return;
-    }
+    if (!info.ok) { paint(info.reason === "error" || info.reason === "no-config" ? "error" : "not-found", null); return; }
     paint("ok", info);
   }
 
-  /* ── Hook: guardar la fecha al pulsar Descargar ──────────── */
   downloadBtn.addEventListener("click", () => {
     const url = downloadBtn.dataset.extensionUrl;
     const date = downloadBtn.dataset.extensionDate;
     const kind = downloadBtn.dataset.extensionKind;
     const size = parseInt(downloadBtn.dataset.extensionSize || "0", 10);
-    if (url && date) {
-      writeStored({ url, kind, size, lastModified: date });
-      setTimeout(run, 500);
-    }
+    if (url && date) { writeStored({ url, kind, size, lastModified: date }); setTimeout(run, 500); }
   }, true);
 
   return { run, get info() { return currentInfo; } };
 })();
 
-/* ── Listener original del botón Descargar (con prioridad al bucket) ─ */
 $('#download').addEventListener('click', () => {
   if (expired) return;
   const bucketUrl = $('#download').dataset.extensionUrl;
   const targetUrl = bucketUrl || service.downloadUrl;
-  if (targetUrl) {
-    window.open(targetUrl, '_blank', 'noopener,noreferrer');
-  } else {
+  if (targetUrl) { window.open(targetUrl, '_blank', 'noopener,noreferrer'); }
+  else {
     const message = $('#download-notice');
     message.hidden = false;
     message.textContent = `La extensión de ${service.name} aún no está cargada.`;
   }
 });
 
-/* ── Lanzar el chequeo de versión al cargar ───────────────── */
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => ExtensionVersion.run());
 } else {
   ExtensionVersion.run();
 }
 
-// Start on visibility so the animation is not missed below the tutorial on mobile.
+/* ═══════════ Animación del anillo de suscripción ═══════════ */
 (function animateBalance() {
   const total = Math.max(1, Number(membership.totalDays) || 30);
   const remaining = Math.max(0, Math.min(total, Number(membership.remainingDays) || 0));
   const number = $('#remaining-days'),
     ring = $('#subscription-progress');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  let frameId = 0,
-    started = false,
-    last = null;
+  let frameId = 0, started = false, last = null;
 
   function paint(days, ratio) {
     if (days !== last) {
-      const previous = last === null ? '' : String(last),
-        next = String(days);
+      const previous = last === null ? '' : String(last), next = String(days);
       number.setAttribute('aria-label', next + ' días disponibles');
       number.replaceChildren();
       [...next].forEach((digit, i) => {
@@ -792,26 +737,16 @@ if (document.readyState === 'loading') {
     ring.classList.remove('is-counting');
     ring.classList.add('is-complete');
   }
-  if (reduced.matches || window.ULTRA_LITE || remaining === 0) {
-    finish();
-    return;
-  }
+  if (reduced.matches || window.ULTRA_LITE || remaining === 0) { finish(); return; }
   paint(total, 0);
 
   function start() {
     if (started) return;
     started = true;
     ring.classList.add('is-counting');
-    const begin = performance.now(),
-      fillTime = 250,
-      holdTime = 0,
-      countTime = 500;
-
+    const begin = performance.now(), fillTime = 250, holdTime = 0, countTime = 500;
     function tick(now) {
-      if (reduced.matches || document.hidden) {
-        finish();
-        return;
-      }
+      if (reduced.matches || document.hidden) { finish(); return; }
       const elapsed = now - begin;
       if (elapsed < fillTime) {
         const t = elapsed / fillTime;
@@ -824,11 +759,7 @@ if (document.readyState === 'loading') {
           value = total - (total - remaining) * ease,
           days = Math.round(value);
         paint(days, value / total);
-
-        if (t === 1) {
-          finish();
-          return;
-        }
+        if (t === 1) { finish(); return; }
       }
       frameId = requestAnimationFrame(tick);
     }
@@ -836,21 +767,13 @@ if (document.readyState === 'loading') {
   }
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => {
-      if (entries.some(e => e.isIntersecting)) {
-        observer.disconnect();
-        start();
-      }
-    }, {
-      threshold: .65
-    });
+      if (entries.some(e => e.isIntersecting)) { observer.disconnect(); start(); }
+    }, { threshold: .65 });
     observer.observe(ring);
   } else start();
-  window.addEventListener('pagehide', () => cancelAnimationFrame(frameId), {
-    once: true
-  });
+  window.addEventListener('pagehide', () => cancelAnimationFrame(frameId), { once: true });
 })();
 
-// No se reproduce video cuando la página queda en segundo plano.
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) video.pause();
 });
