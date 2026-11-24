@@ -625,7 +625,7 @@ window.portalFooterTap = async function () {
       const css = document.createElement('link');
       css.rel = 'stylesheet'; css.href = 'css/admin.css';
       document.head.append(css);
-      await loadPortalScript('js/admin.js');
+      await loadPortalScript('js/admin.js?v=yt01');
     }
     window.openPortalAdmin();
   } catch (e) { alert(e.message); }
