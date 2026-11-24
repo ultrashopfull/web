@@ -8,6 +8,51 @@
   } = window.portalTutorialStore;
   const icon = d => d.icon;
   const key = (s, d) => s + ':' + d;
+
+  /* ═══════════ Helpers YouTube ═══════════ */
+  function extractYouTubeId(url) {
+    if (!url) return null;
+    const s = String(url).trim();
+    const patterns = [
+      /(?:youtube\.com\/watch\?[^\s]*[?&]v=)([a-zA-Z0-9_-]{11})/,
+      /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+      /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+      /(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
+    ];
+    for (const re of patterns) {
+      const m = s.match(re);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  function promptYoutubeUrl(currentUrl) {
+    const raw = prompt(
+      'Pega la URL del video de YouTube:\n\n' +
+      'Formatos aceptados:\n' +
+      '· https://youtu.be/VIDEO_ID\n' +
+      '· https://www.youtube.com/watch?v=VIDEO_ID\n' +
+      '· https://www.youtube.com/shorts/VIDEO_ID\n' +
+      '· https://www.youtube.com/embed/VIDEO_ID',
+      currentUrl || ''
+    );
+    if (raw === null) return null;
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+    const id = extractYouTubeId(trimmed);
+    if (!id) {
+      alert('URL de YouTube no válida.\n\nFormatos aceptados:\n' +
+        '· https://youtu.be/VIDEO_ID\n' +
+        '· https://www.youtube.com/watch?v=VIDEO_ID\n' +
+        '· https://www.youtube.com/shorts/VIDEO_ID\n' +
+        '· https://www.youtube.com/embed/VIDEO_ID');
+      return null;
+    }
+    return { url: trimmed, videoId: id };
+  }
+
+  /* ═══════════ HTML base ═══════════ */
   const root = document.createElement('div');
   root.id = 'tutorial-admin-root';
   root.className = 'admin-ui';
@@ -36,7 +81,7 @@
  </form>
  <aside class="ta-preview-column"><div class="ta-preview-label">VISTA PREVIA <span id="ta-draft-state">Guardado</span></div><div id="ta-brand-preview" class="ta-brand-preview"><div class="ta-brand-art"><div class="ta-brand-orbit" aria-hidden="true"></div><img id="ta-preview-logo" alt=""></div><div class="ta-brand-preview-copy"><span>LICENCIA DIGITAL</span><h4 id="ta-preview-name"></h4><div class="ta-preview-buttons" aria-hidden="true"><span>Ingresar ↗</span><span>Contratar</span></div></div></div><p class="ta-help">Así se verá tu identidad en el catálogo y en las pantallas de la licencia.</p><button type="button" id="ta-reset-brand" class="ta-text-button">Restablecer apariencia original ↺</button></aside></div>
 </section>
-<section id="ta-videos-section" class="ta-section" role="tabpanel" aria-labelledby="ta-tab-videos" hidden><p class="ta-intro">La web muestra automáticamente el video del dispositivo del cliente. Sube aquí cada versión.</p><div id="ta-video-grid" class="ta-video-grid"></div></section>
+<section id="ta-videos-section" class="ta-section" role="tabpanel" aria-labelledby="ta-tab-videos" hidden><p class="ta-intro">La web muestra automáticamente el video del dispositivo del cliente. Sube un archivo o pega una URL de YouTube.</p><div id="ta-video-grid" class="ta-video-grid"></div></section>
 </section></div>
  <footer class="ta-bottom"><div><strong>Guardado en el servidor</strong><p>Los cambios se sincronizan en todos los navegadores.</p></div><button type="button" class="ta-button ta-outline" id="ta-export">Descargar ZIP <span aria-hidden="true">↓</span></button></footer><p id="ta-status" class="ta-status" role="status" aria-live="polite"></p></dialog><dialog id="ta-video-viewer" class="ta-video-viewer" aria-labelledby="ta-viewer-title"><div class="ta-viewer-header"><h3 id="ta-viewer-title">Vista previa</h3><button id="ta-preview-close" type="button" class="ta-button ta-quiet">Cerrar ×</button></div><video id="ta-viewer-video" controls playsinline preload="metadata"></video></dialog><dialog id="ta-delete-card-dialog" class="ta-delete-dialog" aria-labelledby="ta-delete-card-title"><h3 id="ta-delete-card-title">¿Eliminar esta tarjeta?</h3><div class="ta-delete-target"><img id="ta-delete-card-logo" alt=""><strong id="ta-delete-card-name"></strong></div><p>Dejará de aparecer en el portal y en el panel de administración.</p><p id="ta-delete-card-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button id="ta-delete-card-cancel" class="ta-button ta-quiet" type="button" autofocus>Conservar tarjeta</button><button id="ta-delete-card-confirm" class="ta-button ta-confirm-card-delete" type="button">Sí, eliminar</button></div></dialog><dialog id="ta-create-dialog" class="ta-create-dialog" aria-labelledby="ta-new-title"><h3 id="ta-new-title">Nueva tarjeta</h3><p>Crea una tarjeta y personaliza su contenido.</p><form id="ta-new-card-form"><label class="ta-field">Nombre<input id="ta-new-name" maxlength="60" required autocomplete="off" placeholder="Nombre de la tarjeta"></label><p id="ta-new-error" class="ta-error" role="alert" hidden></p><div class="ta-editor-actions"><button type="submit" class="ta-button ta-primary">Crear tarjeta +</button><button id="ta-create-close" type="button" class="ta-button ta-quiet">Cancelar</button></div></form></dialog>`;
   document.body.append(root);
@@ -209,6 +254,14 @@
       return;
     }
     if (!item || !panel.open || service !== selectedService) return;
+
+    // YouTube: abrir en pestaña nueva
+    if (item.type === 'youtube' || item.provider === 'youtube') {
+      const vid = item.videoId;
+      if (vid) window.open(`https://youtu.be/${vid}`, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
     releasePreviews();
     const video = $('#ta-viewer-video');
     $('#ta-viewer-title').textContent = licenseNames[selectedService] + ' · ' + device.name;
@@ -244,7 +297,7 @@
   function updateAvailability() {
     const active = cardDraft().active;
     $('#ta-active-label').textContent = active ? 'Tarjeta activa' : 'Tarjeta agotada';
-    $('#ta-active-description').textContent = active ? 'Los clientes pueden ingresar y contratar.' : 'Se bloquean ambos botones y se muestra “Agotado” al pasar el mouse.';
+    $('#ta-active-description').textContent = active ? 'Los clientes pueden ingresar y contratar.' : 'Se bloquean ambos botones y se muestra "Agotado" al pasar el mouse.';
     $('#ta-card-active').closest('.ta-availability').classList.toggle('is-unavailable', !active);
   }
 
@@ -568,18 +621,41 @@
         k = key(service, device.id),
         record = map.get(k),
         item = record ? (record.deleted ? null : record) : TUTORIAL_DEFAULTS[k];
+      const isYoutube = item && (item.type === 'youtube' || item.provider === 'youtube');
       const card = document.createElement('article');
-      card.className = 'ta-video-card';
+      card.className = 'ta-video-card' + (isYoutube ? ' is-youtube' : '');
       card.dataset.device = device.id;
-      card.innerHTML = `<div class="ta-card-top"><span class="ta-device-icon">${icon(device)}</span><h4>${device.name}</h4><span class="ta-file-state ${item?'has-video':''}">${item?'Disponible':'Sin video'}</span></div><div class="ta-file-info"><strong class="ta-filename"></strong><span class="ta-file-meta"></span></div><div class="ta-card-actions">${item?'<button class="ta-button ta-preview-video ta-quiet" type="button">Ver ▷</button>':''}<button class="ta-button ta-upload ${item?'ta-outline':'ta-primary'}" type="button">${item?'Reemplazar':'Subir video'} <span aria-hidden="true">↑</span></button>${item?'<button class="ta-delete" type="button" aria-label="Borrar tutorial de '+device.name+'">Borrar</button>':''}</div><input type="file" accept="video/mp4,video/webm,.mp4,.webm" class="ta-file-input" aria-label="Subir tutorial de ${device.name}" hidden><div class="ta-delete-confirm" hidden><p>¿Borrar el tutorial de ${device.name}?</p><button type="button" class="ta-button ta-cancel-delete">Cancelar</button><button type="button" class="ta-button ta-confirm-delete">Sí, borrar</button></div>`;
+
+      const cardTop = `<div class="ta-card-top"><span class="ta-device-icon">${icon(device)}</span><h4>${device.name}</h4><span class="ta-file-state ${item?'has-video':''}">${item ? (isYoutube ? 'YouTube' : 'Disponible') : 'Sin video'}</span></div>`;
+      const fileInfo = `<div class="ta-file-info"><strong class="ta-filename"></strong><span class="ta-file-meta"></span></div>`;
+      const actions = `<div class="ta-card-actions">
+          ${item ? '<button class="ta-button ta-preview-video ta-quiet" type="button">Ver ▷</button>' : ''}
+          <button class="ta-button ta-youtube-btn ${item ? 'ta-outline' : 'ta-primary'}" type="button">${isYoutube ? 'Cambiar URL' : 'URL de YouTube'} <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px;margin-left:2px"><path d="M23 12s0-3.5-.45-5.2a2.9 2.9 0 0 0-2-2C18.85 4.3 12 4.3 12 4.3s-6.85 0-8.55.5a2.9 2.9 0 0 0-2 2C1 8.5 1 12 1 12s0 3.5.45 5.2a2.9 2.9 0 0 0 2 2c1.7.5 8.55.5 8.55.5s6.85 0 8.55-.5a2.9 2.9 0 0 0 2-2C23 15.5 23 12 23 12ZM9.75 15.5v-7L15.5 12l-5.75 3.5Z"/></svg></button>
+          <button class="ta-button ta-upload ${item ? 'ta-outline' : 'ta-primary'}" type="button">${item ? 'Reemplazar' : 'Subir video'} <span aria-hidden="true">↑</span></button>
+          ${item ? '<button class="ta-delete" type="button" aria-label="Borrar tutorial de '+device.name+'">Borrar</button>' : ''}
+        </div>
+        <input type="file" accept="video/mp4,video/webm,.mp4,.webm" class="ta-file-input" aria-label="Subir tutorial de ${device.name}" hidden>
+        <div class="ta-delete-confirm" hidden>
+          <p>¿Borrar el tutorial de ${device.name}?</p>
+          <button type="button" class="ta-button ta-cancel-delete">Cancelar</button>
+          <button type="button" class="ta-button ta-confirm-delete">Sí, borrar</button>
+        </div>`;
+      card.innerHTML = cardTop + fileInfo + actions;
+
       if (item) {
-        card.querySelector('.ta-filename').textContent = item.name || 'Tutorial incluido';
-        card.querySelector('.ta-file-meta').textContent = [item.size ? size(item.size) : item.blob ? size(item.blob.size) : 'Incluido en la web', item.duration ? time(item.duration) : ''].filter(Boolean).join(' · ');
+        if (isYoutube) {
+          card.querySelector('.ta-filename').textContent = `YouTube · ${item.videoId || ''}`;
+          card.querySelector('.ta-file-meta').textContent = 'Video enlazado desde YouTube';
+        } else {
+          card.querySelector('.ta-filename').textContent = item.name || 'Tutorial incluido';
+          card.querySelector('.ta-file-meta').textContent = [item.size ? size(item.size) : item.blob ? size(item.blob.size) : 'Incluido en la web', item.duration ? time(item.duration) : ''].filter(Boolean).join(' · ');
+        }
         card.querySelector('.ta-preview-video').addEventListener('click', () => previewVideo(item, device));
       } else {
         card.querySelector('.ta-filename').textContent = 'Sin tutorial';
-        card.querySelector('.ta-file-meta').textContent = 'MP4 / WebM · Máx. 500 MB';
+        card.querySelector('.ta-file-meta').textContent = 'MP4 / WebM · Máx. 500 MB · o URL de YouTube';
       }
+
       const input = card.querySelector('.ta-file-input');
       card.querySelector('.ta-upload').addEventListener('click', () => input.click());
       input.addEventListener('change', () => {
@@ -587,6 +663,36 @@
         input.value = '';
         if (file) uploadVideo(service, device, file, card);
       });
+
+      // Botón "URL de YouTube"
+      card.querySelector('.ta-youtube-btn').addEventListener('click', async () => {
+        if (!authenticated || saving.has(k) || exporting) return;
+        const info = promptYoutubeUrl(isYoutube ? (item.url || '') : '');
+        if (!info) return;
+        saving.add(k);
+        setCardBusy(card, true);
+        try {
+          await saveRecord({
+            key: k,
+            service,
+            device: device.id,
+            url: info.url,
+            provider: 'youtube',
+            videoId: info.videoId,
+            name: `Video YouTube ${info.videoId}`,
+            updatedAt: Date.now(),
+            deleted: false,
+            type: 'youtube',
+          });
+          status('URL de YouTube guardada para ' + device.name + ' en ' + licenseNames[service] + '.');
+        } catch (e) {
+          status(errorText(e), true);
+        } finally {
+          saving.delete(k);
+          renderPanel();
+        }
+      });
+
       card.addEventListener('dragover', e => {
         e.preventDefault();
         card.classList.add('is-dragging');
@@ -603,6 +709,7 @@
         }
         uploadVideo(service, device, e.dataTransfer.files[0], card);
       });
+
       if (item) {
         const confirm = card.querySelector('.ta-delete-confirm');
         card.querySelector('.ta-delete').addEventListener('click', () => {
@@ -687,7 +794,8 @@
         size: file.size,
         duration,
         updatedAt: Date.now(),
-        deleted: false
+        deleted: false,
+        type: 'file',
       });
       status('Video de ' + device.name + ' guardado para ' + licenseNames[service] + '.');
     } catch (e) {
